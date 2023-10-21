@@ -5,8 +5,9 @@ NBA game line predictions using air-ball ML API
 TBD
 
 ## Technologies Used
-frontend - Next/React
-backend - NBA API, AWS, air-ball ML API
+frontend - Next.js, React.js, TypeScript
+backend - Next.js, TypeScript, AWS
+APIs - NBA API, air-ball ML API
 
 ## Deployment
 TBD
