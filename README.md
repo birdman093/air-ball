@@ -1,2 +1,15 @@
 # air-ball
-NBA game line predictions frontend and backend using Next.js, and air-ball machine learning model
+NBA game line predictions using air-ball ML API
+
+## Website
+TBD
+
+## Technologies Used
+frontend - Next/React
+backend - NBA API, AWS, air-ball ML API
+
+## Deployment
+TBD
+
+## Architecture
+TBD
