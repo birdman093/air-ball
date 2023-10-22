@@ -2,11 +2,11 @@ import type { ReactElement } from 'react'
 import Layout from '../components/layout'
 import type { NextPageWithLayout } from './_app'
  
-const Today: NextPageWithLayout = () => {
-  return (<p>Today</p>)
+const Past: NextPageWithLayout = () => {
+  return (<p>Past</p>)
 }
  
-Today.getLayout = function getLayout(page: ReactElement) {
+Past.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
       {page}
@@ -14,4 +14,4 @@ Today.getLayout = function getLayout(page: ReactElement) {
   )
 }
  
-export default Today
+export default Past
