@@ -7,25 +7,24 @@ import { nbagames } from '@/services/games/nbagames'
 import { todayDate } from '@/util/date'
 import '../styles/today.css'
 
-
 export const getStaticProps = (async (context) => {
-  const res = await fetch('https://api.github.com/repos/vercel/next.js')
-  const repo = await res.json()
-  return { props: { repo } }
+  const today = todayDate();
+  const todaygames: apiGame[] = await nbagames(today);
+  return { props: { todaygames } }
 }) satisfies GetStaticProps<{
-  repo: apiGame
+  todaygames: apiGame[]
 }>
 
 export default function Today({
-  repo,
+  todaygames,
 }: InferGetStaticPropsType<typeof getStaticProps>)
 {
+  
   const [games, setGames] = useState<apiGame[]>([])
-
   const today = todayDate();
 
   useEffect(() => {
-    nbagames(today, setGames);
+    setGames(todaygames);
   }, []);
 
 
@@ -47,7 +46,7 @@ export default function Today({
         {games.map((game, index) => (
         <tr key={index}>
           <td>{game.awayteam}@{game.hometeam}</td>
-          <td>{game.gametime.toLocaleTimeString()}</td>
+          <td>{new Date(game.gametime).toLocaleTimeString()}</td>
           <td>{game.favorite} {game.line}</td>
           <td>N/A</td>
         </tr>

@@ -3,7 +3,7 @@ import { nbaAPIDate } from "@/util/date";
 import { nbaodds } from "../odds/odds";
 import { Dispatch, SetStateAction } from "react";
 
-export const nbagames = async (todayDate: string, setGames: Dispatch<SetStateAction<apiGame[]>>) => {
+export const nbagames = async (todayDate: string) => {
     let games: apiGame[] = []
 
     // date must be modified by 1 day
@@ -38,14 +38,13 @@ export const nbagames = async (todayDate: string, setGames: Dispatch<SetStateAct
                 ${awayteam} vs. ${hometeam}`)
                 continue;
             }
-            match.gametime = new Date(game.date.start);
+            match.gametime = new Date(game.date.start).toISOString();
             games.push(match);
         }  
     } catch (error) {
         console.error(error);
     }
-    console.log(games)
-    setGames(games)
+    return games;
 }
 
 const findmatch = (hometeam: string, awayteam: string, odds: apiGame[]) => {
