@@ -32,15 +32,14 @@ while currentdate <= enddate:
         away_season: NbaSeasonStats = db.GetTeamFromDatabase(away_game.team_name)
 
         home_season.updateteamstats(home_game, True)
-        home_season.updateopponentstats(away_game)
+        home_season.updateopponentstats(away_game, away_season.rank)
         away_season.updateteamstats(away_game, False)
-        away_season.updateopponentstats(home_game)
+        away_season.updateopponentstats(home_game, home_season.rank)
 
         db.EditTeamInDatabase(home_game.team_name, home_season)
         db.EditTeamInDatabase(away_game.team_name, away_season)
     
     # sos and rank daily cumulative stats
-    #TODO: SOS and Rank
     team: NbaSeasonStats
     allteams: list[NbaSeasonStats] = db.GetAllTeamsFromDatabase()    
     allteams.sort(key=lambda team: team._winpct(), reverse=True) # sort highest
@@ -62,7 +61,7 @@ while currentdate <= enddate:
     for game in nextdaygames:
         hometeam = db.GetTeamFromDatabase(game[nbaApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[nbaApi.AWAY])
-        prediction = airballApi.makePrediction(hometeam, awayteam)
+        prediction = airballApi.makePrediction(hometeam, awayteam, currentdate)
         predictions.append(Prediction(hometeam, awayteam, prediction))
         
     db.CreatePredictions(

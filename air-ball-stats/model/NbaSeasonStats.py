@@ -1,4 +1,5 @@
 import json
+from datetime import _Date, datetime
 from model.NbaGameStats import NbaGameStats
 
 HOME = "home"
@@ -19,7 +20,7 @@ class NbaSeasonStats:
         # cumulative stats
         self.wins: int = 0
         self.losses: int = 0
-        self.rank: int = -1
+        self.rank: int = 16
 
         # team cumulative stats
         self._3pm: int = 0
@@ -45,10 +46,10 @@ class NbaSeasonStats:
         self.opp_drb: int = 0
 
         # cumulative game stats
-        self.gamedates = []
+        self.gamedates: list[str] = [] # YEAR-MO-DA e.g.2018-11-24
         self.washometeam: list[bool] = []
         self.waswinner: list[bool] = []
-        self.sos: list[float] = []
+        self.sos: list[int] = []
         self.ranks: list[int] = []
 
     def updateteamstats(self, stats: NbaGameStats, hometeam: bool):
@@ -71,10 +72,8 @@ class NbaSeasonStats:
         self.gamedates.append(stats.game_date)
         self.washometeam.append(hometeam)
         self.waswinner.append(stats.winloss)
-        self.sos = []
-        self.ranks = []
 
-    def updateopponentstats(self, stats: NbaGameStats):
+    def updateopponentstats(self, stats: NbaGameStats, opp_rank: int):
         self.opp_3pm += stats.fg3m
         self.opp_3pa += stats.fg3a
         self.opp_2pm += stats.fgm - stats.fg3m
@@ -85,8 +84,11 @@ class NbaSeasonStats:
         self.opp_orb += stats.oreb
         self.opp_drb += stats.dreb
 
+        self.sos.append(opp_rank)
+
     def setrank(self, newrank):
         self.rank = newrank
+        self.ranks.append(newrank)
 
     def gamesplayed(self) -> int:
         return self.wins + self.losses
@@ -94,16 +96,18 @@ class NbaSeasonStats:
     def enoughgamesplayedcheck(self) -> bool:
         return self.gamesplayed() < MINGAMES
 
-    def _restdays(self) -> int:
+    def _restdays(self, date: _Date) -> int:
         '''
-        rest days between previous two games
-        returns 0 if played yesterday
+        Days off between games 
+        return 1 if no game yester
+        return 0 if played yesterday
         '''
-        if len(self.gamedates) < 2 or self.gamedates[-1] == "" \
-        or self.gamedates[-2] == "":
-            return 1
-        # TODO: dates in python
-        return 1
+        if len(self.gamedates) == 0: return 1
+        lastgame_date_str = self.gamedates[-1]
+        lastgame_date = datetime.strptime(lastgame_date_str, '%Y-%m-%d').date()
+        days_diff = (date - lastgame_date).days
+
+        return 0 if days_diff == 1 else 1
     
     def _homeprior(self) -> int:
         '''
@@ -158,13 +162,13 @@ class NbaSeasonStats:
     def _opp_efgpct(self) -> float:
         return (1.5 * self.opp_3pm + self.opp_2pm)/ (self.opp_3pa + self.opp_2pa)
 
-    def airballformat(self, hometeam: bool) -> dict:
+    def airballformat(self, hometeam: bool, date: _Date) -> dict:
         ''' Project Air-Ball API Formatting '''
         if not self.enoughgamesplayedcheck():
             return self.errormsg(MINGAMEERROR)
         location = HOME if hometeam else AWAY
         
-        return { f"{location}_team_days_rest": self._restdays(),
+        return { f"{location}_team_days_rest": self._restdays(date),
                 f"{location}_team_home_prior": self._homeprior(),
                 f"{location}_team_sos": self._sos(),
                 f"{location}_team_sos_last_10": self._sos(MINGAMES), 

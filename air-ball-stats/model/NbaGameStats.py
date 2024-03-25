@@ -9,7 +9,7 @@ class NbaGameStats:
         self.team_abbreviation = df['TEAM_ABBREVIATION']
         self.team_name = df['TEAM_NAME']
         self.game_id = df['GAME_ID']
-        self.game_date = df['GAME_DATE']
+        self.game_date = df['GAME_DATE'] # YEAR-MO-DA e.g.2018-11-24
         self.matchup = df['MATCHUP']
         self.winloss: bool = True if df['WL'] == 'W' else False 
         self.minutes = df['MIN'] 

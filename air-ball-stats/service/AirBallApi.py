@@ -1,6 +1,6 @@
 import requests
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, _Date
 from dotenv import load_dotenv
 
 from model.NbaSeasonStats import NbaSeasonStats
@@ -37,14 +37,16 @@ class AirBallApi:
                           self.AWAY : awayteam})
         return games
     
-    def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats) -> dict:
+    def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats,
+                       date: _Date) -> dict:
         '''
         air-ball response -- 
         {"home_team_plus_minus_predictions":
         [{"home_team_plus_minus":1.6254919885342773}]}
         '''
         url = "http://ec2-52-90-234-151.compute-1.amazonaws.com:8000/predict"
-        payload = {"games" : [home.airballformat() | away.airballformat()]}
+        payload = {"games" : [home.airballformat(True, date) 
+                              | away.airballformat(False, date)]}
         response = requests.post(url, json=payload).json()
         return response["home_team_plus_minus_predictions"][0]
         
