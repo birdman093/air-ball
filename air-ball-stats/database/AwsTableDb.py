@@ -20,8 +20,8 @@ class AwsTableDb:
         self.configpartitionvalue = 'Configuration'
 
         # prediction data
-        self.predictiontable = 'predictionDb'
-        self.partitionkey = 'date'
+        self.prediction_table = 'predictionDb'
+        self.prediction_partitionkey = 'date'
 
 
     def addToDb(self, partitionkey: str, serializeddata: str):
@@ -102,10 +102,13 @@ class AwsTableDb:
             }
         )
 
-    def setPrediction(self):
-        pass
-
-    def getPrediction(self, date):
-        pass
+    def setPrediction(self, date: str, serializeddata: str):
+        self.dynamodb.put_item(
+            TableName=self.prediction_table,
+            Item = {
+                self.prediction_partitionkey: {'S': self.date},
+                'data': {'S': serializeddata}
+            }
+        )
 
     

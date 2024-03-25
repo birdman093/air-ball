@@ -3,11 +3,12 @@ Kicks off on AWS at 3am
 '''
 #python
 import numpy as np, pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, _Date
 from dotenv import load_dotenv
 # internal 
 from model.NbaGameStats import NbaGameStats
 from model.NbaSeasonStats import NbaSeasonStats
+from model.Prediction import Prediction
 from database.Database import Database
 from service.NbaApi import NbaApi
 from service.AirBallApi import AirBallApi
@@ -16,7 +17,6 @@ from service.AirBallApi import AirBallApi
 db: Database = Database()
 nbaApi: NbaApi = NbaApi(db.year) 
 airballApi: AirBallApi = AirBallApi()
-load_dotenv('credentials/.env.local')
 currentdate = datetime.strptime(db.startdate, '%Y/%m/%d').date()  
 enddate = datetime.strptime(db.enddate, '%Y/%m/%d').date()  
 WINPCTTOLERANCE = .001
@@ -58,11 +58,15 @@ while currentdate <= enddate:
     nextdaygames: list[dict[str,str]] = AirBallApi.getGames(
         currentdate.year, currentdate.month, currentdate.day)
     
+    predictions: list[Prediction] = []
     for game in nextdaygames:
         hometeam = db.GetTeamFromDatabase(game[nbaApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[nbaApi.AWAY])
         prediction = airballApi.makePrediction(hometeam, awayteam)
-        # TODO: Store prediction
+        predictions.append(Prediction(hometeam, awayteam, prediction))
+        
+    db.CreatePredictions(
+            currentdate, predictions)
 
 
 

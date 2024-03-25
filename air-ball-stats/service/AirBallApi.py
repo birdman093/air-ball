@@ -37,7 +37,7 @@ class AirBallApi:
                           self.AWAY : awayteam})
         return games
     
-    def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats):
+    def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats) -> dict:
         '''
         air-ball response -- 
         {"home_team_plus_minus_predictions":
@@ -46,5 +46,5 @@ class AirBallApi:
         url = "http://ec2-52-90-234-151.compute-1.amazonaws.com:8000/predict"
         payload = {"games" : [home.airballformat() | away.airballformat()]}
         response = requests.post(url, json=payload).json()
-        return response["home_team_plus_minus_predictions"][0]["home_team_plus_minus"]
+        return response["home_team_plus_minus_predictions"][0]
         

@@ -1,6 +1,8 @@
+from datetime import _Date
 from model.NbaSeasonStats import NbaSeasonStats
-from AwsTableDb import AwsTableDb
 from model.DailyScriptParameters import DailyScriptParameters
+from model.Prediction import Prediction
+from AwsTableDb import AwsTableDb
 
 class Database:
     def __init__(self):
@@ -41,8 +43,6 @@ class Database:
         serializeddata: list[str] = [team.to_json() for team in seasonstatslist] 
         self.db.addItemsToDbBatch(teamname, serializeddata)
 
-    def CreatePredictions(self, date, hometeam, awayteam, prediction): 
-        pass
-
-    def GetPredictions(self, date):
-        pass
+    def CreatePredictions(self, date: _Date, predictions: list[Prediction]): 
+        self.db.setPrediction(date.strftime('%Y-%m-%d'), 
+            [prediction.to_json() for prediction in predictions])
