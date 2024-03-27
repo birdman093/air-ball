@@ -3,7 +3,7 @@ Kicks off on AWS at 3am
 '''
 #python
 import numpy as np, pandas as pd
-from datetime import datetime, timedelta, _Date
+from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 # internal 
 from model.NbaGameStats import NbaGameStats
@@ -12,17 +12,18 @@ from model.Prediction import Prediction
 from database.Database import Database
 from service.NbaApi import NbaApi
 from service.AirBallApi import AirBallApi
+from utility.dates import *
 
 ###### Server Update Script - Run daily at 3am #######
 db: Database = Database()
 nbaApi: NbaApi = NbaApi(db.year) 
-airballApi: AirBallApi = AirBallApi()
-currentdate = datetime.strptime(db.startdate, '%Y/%m/%d').date()  
-enddate = datetime.strptime(db.enddate, '%Y/%m/%d').date()  
+airBallApi: AirBallApi = AirBallApi()
+currentdate = slashesStringToDate(db.startdate) 
+enddate = slashesStringToDate(db.enddate) 
 WINPCTTOLERANCE = .001
 
 while currentdate <= enddate:
-    currentdategames = nbaApi.getgamesondate(currentdate)
+    currentdategames = nbaApi.getgamesondate(dateToSlashesString(currentdate))
 
     for game in currentdategames:
         home_game: NbaGameStats = game[nbaApi.HOME]
@@ -43,9 +44,9 @@ while currentdate <= enddate:
     team: NbaSeasonStats
     allteams: list[NbaSeasonStats] = db.GetAllTeamsFromDatabase()    
     allteams.sort(key=lambda team: team._winpct(), reverse=True) # sort highest
-    previousteam = allteams[0]
+    previousteam = allteams[0] if len(allteams) > 0 else None
     rank = 1
-    for idx, team in allteams.enumerate():
+    for idx, team in enumerate(allteams):
         if previousteam._winpct() - team._winpct() > WINPCTTOLERANCE:
             rank = idx + 1
         team.setrank(rank)
@@ -54,18 +55,21 @@ while currentdate <= enddate:
     currentdate += timedelta(days=1)
 
     # make predictions for next day
-    nextdaygames: list[dict[str,str]] = AirBallApi.getGames(
-        currentdate.year, currentdate.month, currentdate.day)
+    nextdaygames: list[dict[str,str]] = airBallApi.getGames(currentdate)
     
     predictions: list[Prediction] = []
     for game in nextdaygames:
         hometeam = db.GetTeamFromDatabase(game[nbaApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[nbaApi.AWAY])
-        prediction = airballApi.makePrediction(hometeam, awayteam, currentdate)
+        prediction = airBallApi.makePrediction(hometeam, awayteam, currentdate)
         predictions.append(Prediction(hometeam, awayteam, prediction))
         
     db.CreatePredictions(
             currentdate, predictions)
+    
+#TODO: Update Daily Script Parameters
+    
+print("** Completed **")
 
 
 

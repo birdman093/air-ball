@@ -1,5 +1,5 @@
 import json
-from datetime import _Date
+from datetime import date
 
 class Prediction:
     def __init__(self, hometeamname: str, awayteamname: str,

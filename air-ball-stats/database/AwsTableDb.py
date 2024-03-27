@@ -21,7 +21,7 @@ class AwsTableDb:
 
         # prediction data
         self.prediction_table = 'predictionDb'
-        self.prediction_partitionkey = 'date'
+        self.prediction_partitionkey = 'gamedate'
 
 
     def addToDb(self, partitionkey: str, serializeddata: str):
@@ -102,12 +102,12 @@ class AwsTableDb:
             }
         )
 
-    def setPrediction(self, date: str, serializeddata: str):
+    def setPrediction(self, date: str, serializeddataList: list[str]):
         self.dynamodb.put_item(
             TableName=self.prediction_table,
             Item = {
-                self.prediction_partitionkey: {'S': self.date},
-                'data': {'S': serializeddata}
+                self.prediction_partitionkey: {'S': date},
+                'data': {'L': [{'S': item} for item in serializeddataList]}
             }
         )
 

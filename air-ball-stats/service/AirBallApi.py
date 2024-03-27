@@ -1,33 +1,39 @@
 import requests
 import os
-from datetime import datetime, timedelta, _Date
+from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
 from model.NbaSeasonStats import NbaSeasonStats
+from utility.dates import dateToDashesString
 
 class AirBallApi:
     def __init__(self):
         self.HOME = 'home'
         self.AWAY = 'away'
-        load_dotenv('service/credentials/.env.local')
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        env_path = os.path.join(script_dir, 'credentials', '.env.local')
+        load_dotenv(env_path)
 
-    def getGames(self, year, month, day) -> list[dict[str, str]]:
+    def getGames(self, date: date) -> list[dict[str, str]]:
         '''
         All games on day
         '''
-        date = datetime(year, month, day)
         next_day = date + timedelta(days=1)
-        today_api_date = next_day.strftime('%Y-%m-%d')
+        today_api_date = dateToDashesString(next_day)
 
         url = f"https://api-nba-v1.p.rapidapi.com/games?date={today_api_date}"
         headers = {
             'X-RapidAPI-Key': os.getenv('NEXT_PUBLIC_RAPIDAPI_KEY'),
             'X-RapidAPI-Host': os.getenv('NEXT_PUBLIC_RAPIDAPI_NBA_HOST')
         }
-        response = requests.get(url, headers=headers)
-        print(response.json())
-        data = response.json()['response']
 
+        try: 
+            response = requests.get(url, headers=headers)
+            data = response.json()['response']
+            print(f'{len(data)} API-NBA-V1 Games loaded from {date}')
+        except: 
+            raise Exception(f'Failed to retrieve API-NBA-V1 Games on {date}')
+        
         games = []
         for game in data:
             hometeam = game['teams']['home']['name']
@@ -38,15 +44,25 @@ class AirBallApi:
         return games
     
     def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats,
-                       date: _Date) -> dict:
+                       date: date) -> dict:
         '''
-        air-ball response -- 
+        air-ball sample response -- 
         {"home_team_plus_minus_predictions":
         [{"home_team_plus_minus":1.6254919885342773}]}
         '''
-        url = "http://ec2-52-90-234-151.compute-1.amazonaws.com:8000/predict"
+        url = os.getenv('AIR_BALL_PREDICTION_URL')
         payload = {"games" : [home.airballformat(True, date) 
                               | away.airballformat(False, date)]}
-        response = requests.post(url, json=payload).json()
-        return response["home_team_plus_minus_predictions"][0]
+        
+        try:
+            response = requests.post(url, json=payload).json()
+            prediction = response["home_team_plus_minus_predictions"][0]
+            print(f'Prediction made {away.name} @ {home.name}: {prediction}')
+        except:
+            raise Exception(f'Failed to make prediction\n' +
+                            f'url: {url}\n' +
+                            f'payload: {payload}\n') 
+
+
+        return prediction
         

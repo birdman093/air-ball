@@ -1,6 +1,7 @@
 from nba_api.stats.endpoints import leaguegamefinder
 from nba_api.stats.static import teams
 import pandas as pd
+from datetime import date
 
 from model.NbaGameStats import NbaGameStats
 
@@ -11,18 +12,25 @@ class NbaApi:
         self.AWAY = 'away'
         self.HOME = 'home'
 
-    def getgamesondate(self, date: str) -> dict[str, dict[str, NbaGameStats]]:
+    def getgamesondate(self, date: date) -> dict[str, dict[str, NbaGameStats]]:
         '''
         Get nba games by date formatted #MO/DAY/YEAR  
         Return: gameid : {home : {stats}, away: {stats}}
         '''
 
-        # TODO: Handle an error here
-        currentdategames: pd.DataFrame = leaguegamefinder.LeagueGameFinder(
-            league_id_nullable = self.LEAGUE,            
-            season_nullable = self.year,        
-            date_from_nullable = date,                                                 
-            date_to_nullable = date).get_data_frames()[0]
+        try: 
+            currentdategames: pd.DataFrame = leaguegamefinder.LeagueGameFinder(
+                league_id_nullable = self.LEAGUE,            
+                season_nullable = self.year,        
+                date_from_nullable = date,                                                 
+                date_to_nullable = date).get_data_frames()[0]
+            print(f'{len(currentdategames)} games loaded from LeagueGameFinder on {date}')
+        except:
+            raise Exception(  
+                f'NBA API failed: league_id_nullable = {self.LEAGUE}, ' +            
+                f'season_nullable = {self.year}, ' +      
+                f'date_from_nullable = {date}, ' +                                                
+                f'date_to_nullable = {date}')
 
         uniquegameids = {}
         for index, game in currentdategames.iterrows():

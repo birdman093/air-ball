@@ -1,6 +1,7 @@
 import json
-from datetime import _Date, datetime
+from datetime import date, datetime
 from model.NbaGameStats import NbaGameStats
+from utility.dates import slashesStringToDate
 
 HOME = "home"
 AWAY = "away"
@@ -96,7 +97,7 @@ class NbaSeasonStats:
     def enoughgamesplayedcheck(self) -> bool:
         return self.gamesplayed() < MINGAMES
 
-    def _restdays(self, date: _Date) -> int:
+    def _restdays(self, date: date) -> int:
         '''
         Days off between games 
         return 1 if no game yester
@@ -104,7 +105,7 @@ class NbaSeasonStats:
         '''
         if len(self.gamedates) == 0: return 1
         lastgame_date_str = self.gamedates[-1]
-        lastgame_date = datetime.strptime(lastgame_date_str, '%Y-%m-%d').date()
+        lastgame_date = slashesStringToDate(lastgame_date_str)
         days_diff = (date - lastgame_date).days
 
         return 0 if days_diff == 1 else 1
@@ -162,7 +163,7 @@ class NbaSeasonStats:
     def _opp_efgpct(self) -> float:
         return (1.5 * self.opp_3pm + self.opp_2pm)/ (self.opp_3pa + self.opp_2pa)
 
-    def airballformat(self, hometeam: bool, date: _Date) -> dict:
+    def airballformat(self, hometeam: bool, date: date) -> dict:
         ''' Project Air-Ball API Formatting '''
         if not self.enoughgamesplayedcheck():
             return self.errormsg(MINGAMEERROR)
