@@ -24,7 +24,8 @@ class NbaApi:
                 season_nullable = self.year,        
                 date_from_nullable = date,                                                 
                 date_to_nullable = date).get_data_frames()[0]
-            print(f'{len(currentdategames)} games loaded from LeagueGameFinder on {date}')
+            print(f'{len(currentdategames)} teams loaded ' +
+                  f'from LeagueGameFinder on {date}')
         except:
             raise Exception(  
                 f'NBA API failed: league_id_nullable = {self.LEAGUE}, ' +            
@@ -40,6 +41,9 @@ class NbaApi:
                 uniquegameids[game['GAME_ID']] = {}
             
             uniquegameids[game['GAME_ID']][teamside] = NbaGameStats(game)
+        
+        print(f'{len(uniquegameids)} games loaded ' +
+                  f'from LeagueGameFinder on {date}')
 
         return uniquegameids
     

@@ -12,9 +12,9 @@ class NbaSeasonStats:
     '''
     Cumulative Season Stats by Team and Year up-to-date
     '''
-    def __init__(self, fullname: str, year: str):
+    def __init__(self, name: str, year: str):
         # identifiers
-        self.name: str = fullname
+        self.name: str = name
         self.year: str = year
         self.abbreviation: str = ''
 
@@ -222,10 +222,9 @@ class NbaSeasonStats:
         self.predictiondate = predictiondate
 
     @classmethod
-    def from_json(cls, json_str):
-        data = json.loads(json_str)
-        obj = cls()
-        obj.__dict__.update(data)
+    def from_json(cls, json_dict):
+        obj = cls(json_dict['name'], json_dict['year'])
+        obj.__dict__.update(json_dict)
         return obj
 
 

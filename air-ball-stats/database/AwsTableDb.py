@@ -75,14 +75,16 @@ class AwsTableDb:
     def getAllFromDbExceptConfig(self) -> list[str]:
         # Scan operation with a filter expression to exclude the config item
         response = self.dynamodb.scan(
-        TableName=self.teamtable,
-        FilterExpression=f"{self.partitionkey} <> :configVal",
-        ExpressionAttributeValues={
-            ':configVal': {'S': self.configpartitionvalue}
-        },
-        Limit=50
+            TableName=self.teamtable,
+            FilterExpression=f"{self.partitionkey} <> :configVal",
+            ExpressionAttributeValues={
+                ':configVal': {'S': self.configpartitionvalue}
+            },
+            Limit=50
         )
-        return response.get('Items', [])
+        items = response['Items']
+        processedItems = [json.loads(item['data']['S']) for item in items]
+        return processedItems
 
     def getTableConfig(self) -> str:
         response = self.dynamodb.get_item(

@@ -55,7 +55,7 @@ class Database:
     def GetAllTeamsFromDatabase(self) -> list[NbaSeasonStats]:
         try: 
             seasonstatslist: list[str] = self.db.getAllFromDbExceptConfig()
-            print(f'{len(seasonstatslist)} retrieved from Database')
+            print(f'{len(seasonstatslist)} teams retrieved from Database')
         except:
             raise Exception('Get All Teams Failed')
 

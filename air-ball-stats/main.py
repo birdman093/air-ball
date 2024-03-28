@@ -25,7 +25,7 @@ WINPCTTOLERANCE = .001
 while currentdate <= enddate:
     currentdategames = nbaApi.getgamesondate(dateToSlashesString(currentdate))
 
-    for game in currentdategames:
+    for game in currentdategames.values():
         home_game: NbaGameStats = game[nbaApi.HOME]
         away_game: NbaGameStats = game[nbaApi.AWAY]
         
