@@ -62,9 +62,9 @@ while currentdate <= enddate:
         hometeam = db.GetTeamFromDatabase(game[nbaApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[nbaApi.AWAY])
         prediction = airBallApi.makePrediction(hometeam, awayteam, currentdate)
-        predictions.append(Prediction(hometeam, awayteam, prediction))
+        predictions.append(Prediction(hometeam.name, awayteam.name, prediction))
         
-    db.CreatePredictions(
+    db.AddPredictions(
             currentdate, predictions)
     
 #TODO: Update Daily Script Parameters

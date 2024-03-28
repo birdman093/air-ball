@@ -2,6 +2,7 @@ import json
 from datetime import date, datetime
 from model.NbaGameStats import NbaGameStats
 from utility.dates import slashesStringToDate
+from utility.division import safe_divide
 
 HOME = "home"
 AWAY = "away"
@@ -121,47 +122,47 @@ class NbaSeasonStats:
     def _sos(self, numgames = 100) -> float:
         numgames = min(numgames, self.gamesplayed())
         totalgames = len(self.sos)
-        if numgames == 0 or totalgames == 0: return float('inf')
-        total_sos = sum(self.sos(i) for i in range(totalgames - numgames, totalgames))
+        if numgames == 0 or totalgames == 0: return 16
+        total_sos = sum(self.sos[i] for i in range(totalgames - numgames, totalgames))
         return total_sos / numgames
         
 
-    def _winpct(self, numgames = 100) -> float:
-        numgames = min(numgames, self.gamesplayed())
-        totalgames = len(self.winner)
-        if numgames == 0 or totalgames == 0: return float('inf')
-        total_wins = sum(1 if self.waswinner(i) == True else 0  for i in range(totalgames - numgames, totalgames))
-        return total_wins / numgames
+    def _winpct(self, calculationgames = 100) -> float:
+        playedgames = self.gamesplayed()
+        calculationgames = min(calculationgames, playedgames)
+        if calculationgames == 0 or playedgames == 0: return 1 # 100% win pct
+        total_wins = sum(1 if self.waswinner[i] == True else 0 for i in range(playedgames - calculationgames, playedgames))
+        return total_wins / calculationgames
 
     def _3ptpct(self) -> float: 
-        return self._3pm / self._3pa
+        return safe_divide(self._3pm, self._3pa)
     
     def _opp_3ptpct(self) -> float: 
-        return self.opp_3pm / self._3pa
+        return safe_divide(self.opp_3pm, self._3pa)
 
     def _2ptpct(self) -> float:
-        return self._2pm / self._2pa
+        return safe_divide(self._2pm, self._2pa)
     
     def _opp_2ptpct(self) -> float:
-        return self.opp_2pm / self._2pa
+        return safe_divide(self.opp_2pm, self._2pa)
     
     def _pp100pp(self) -> float:
-        return 100 * (self.pts/ self.poss)
+        return 100 * (safe_divide(self.pts, self.poss))
     
     def _opp_pp100pp(self) -> float:
-        return 100 * (self.opp_pts/ self.opp_poss)
+        return 100 * (safe_divide(self.opp_pts, self.opp_poss))
     
     def _orbpct(self) -> float:
-        return self.orb / (self._2pm + self._3pm)
+        return safe_divide(self.orb, (self._2pm + self._3pm))
     
     def _drbpct(self) -> float:
-        return self.drb / self.opp_missed_shots
+        return safe_divide(self.drb, self.opp_missed_shots)
     
     def _efgpct(self) -> float:
-        return (1.5 * self._3pm + self._2pm)/ (self._3pa + self._2pa)
+        return safe_divide((1.5 * self._3pm + self._2pm), (self._3pa + self._2pa))
 
     def _opp_efgpct(self) -> float:
-        return (1.5 * self.opp_3pm + self.opp_2pm)/ (self.opp_3pa + self.opp_2pa)
+        return safe_divide((1.5 * self.opp_3pm + self.opp_2pm),(self.opp_3pa + self.opp_2pa))
 
     def airballformat(self, hometeam: bool, date: date) -> dict:
         ''' Project Air-Ball API Formatting '''

@@ -34,7 +34,7 @@ class AwsTableDb:
         )
 
     def addItemsToDbBatch(self, partitionkeys: list[str], serializeddata: list[str]):
-        MAX_BATCH_SIZE = 25
+        MAX_BATCH_SIZE = 20
 
         if len(partitionkeys) != len(serializeddata):
             raise ValueError("Partition keys and serialized data lists have non-matching lengths.")
@@ -47,20 +47,20 @@ class AwsTableDb:
                     {
                         'PutRequest': {
                             'Item': {
-                                'partitionKeyAttributeName': {'S': item['partitionkey']},
+                                self.partitionkey: {'S': item['partitionkey']},  # Use the actual partition key attribute name
                                 'data': {'S': item['serializeddata']}
                             }
                         }
                     } for item in batch
                 ]
             }
-
-            # Making the batch_write_item request
             response = self.dynamodb.batch_write_item(RequestItems=request_items)
 
             unprocessed_items = response.get('UnprocessedItems', {})
             if unprocessed_items:
+                # Handle unprocessed items (e.g., by retrying)
                 raise Exception(f"Warning: Some items were not processed: {unprocessed_items}")
+
 
 
     def getFromDb(self, partitionkey: str) -> str:

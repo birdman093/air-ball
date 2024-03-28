@@ -73,7 +73,7 @@ class Database:
         except:
             raise Exception(f'Edit All Teams Failed With: {seasonstatslist}')
 
-    def CreatePredictions(self, date: date, predictions: list[Prediction]): 
+    def AddPredictions(self, date: date, predictions: list[Prediction]): 
         try:
             self.db.setPrediction(dateToDashesString(date), 
                 [prediction.to_json() for prediction in predictions])
