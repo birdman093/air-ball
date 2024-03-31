@@ -5,16 +5,19 @@ from model.NbaSeasonStats import NbaSeasonStats
 class Prediction:
     
     def __init__(self, hometeamname: str, hometeamgames: int, awayteamname: str,
-                 awayteamgames: int, line: dict, prediction: dict,
-                 hometeaminput: str, awayteaminput: str):
+                 awayteamgames: int, prediction: dict,
+                 hometeaminput: str, awayteaminput: str,
+                 hometeamline: str, awayteamline: str):
         self.hometeamname = hometeamname
         self.hometeamgames = hometeamgames
         self.awayteamname = awayteamname
         self.awayteamgames = awayteamgames
         self.plus_minus = "home_team_plus_minus"
         self.hometeamplusminusprediction = prediction[self.plus_minus]
-        self.hometeam = hometeaminput
-        self.awayteam = awayteaminput
+        self.hometeaminput = hometeaminput
+        self.awayteaminput = awayteaminput
+        self.hometeamline = hometeamline
+        self.awayteamline = awayteamline
         #self.hometeamplusminusline = line[self.plus_minus]
 
     def __str__(self):

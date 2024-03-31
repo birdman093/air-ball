@@ -34,7 +34,6 @@ class NbaSeasonStats:
         self.drb: int = 0
 
         # opponent cumulative stats
-        self.opp_missed_shots: int = 0
         self.opp_3pm: int = 0
         self.opp_3pa: int = 0
         self.opp_2pm: int = 0
@@ -150,13 +149,16 @@ class NbaSeasonStats:
         return safe_divide(self.orb, (self._2pm + self._3pm))
     
     def _drbpct(self) -> float:
-        return safe_divide(self.drb, self.opp_missed_shots)
+        return safe_divide(self.drb, self._opp_missed_shots())
     
     def _efgpct(self) -> float:
         return safe_divide((1.5 * self._3pm + self._2pm), (self._3pa + self._2pa))
 
     def _opp_efgpct(self) -> float:
         return safe_divide((1.5 * self.opp_3pm + self.opp_2pm),(self.opp_3pa + self.opp_2pa))
+    
+    def _opp_missed_shots(self) -> int:
+        return self.opp_3pa + self.opp_2pa - self.opp_3pm - self.opp_2pm
 
     def airballformat(self, hometeam: bool, date: date, mingames: int) -> dict:
         ''' Project Air-Ball API Formatting '''

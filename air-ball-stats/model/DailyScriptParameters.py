@@ -4,8 +4,8 @@ class DailyScriptParameters:
     def __init__(self):
         self.seasonyear = '2023-24'
         self.firstdayofseason = True 
-        self.startdate = '10/24/2023'
-        self.enddate = '10/30/2023'
+        self.startdate = '03/31/2024'
+        self.enddate = '03/31/2024'
 
     def to_json(self):
         return json.dumps(self.__dict__)

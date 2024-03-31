@@ -67,9 +67,9 @@ while currentdate <= enddate:
         prediction = airBallApi.makePrediction(
             hometeam, awayteam, currentdate, MINGAMES)
         
-        currentdatedashes = datetime.strptime(currentdate, "%Y-%m-%d")
-        todatedatedashes = datetime.strptime(date.today(), "%Y-%m-%d")
-        if currentdatedashes == todatedatedashes:
+        currentdatedashes = currentdate.strftime("%Y-%m-%d")
+        todaydatedashes = date.today().strftime("%Y-%m-%d")
+        if currentdatedashes == todaydatedashes:
             spreads = nbaBettingLine.get_game_lines()
             hometeambettingline = bettingline.get(spreads.get(hometeam.name))
             awayteambettingline = bettingline.get(spreads.get(awayteam.name))
@@ -78,17 +78,17 @@ while currentdate <= enddate:
             awayteambettingline = ""
 
         predictions.append(Prediction(
-            hometeam.name, hometeam.gamesplayed() - 1, 
-            awayteam.name, awayteam.gamesplayed() - 1,
-            {}, prediction,
+            hometeam.name, hometeam.gamesplayed(), 
+            awayteam.name, awayteam.gamesplayed(),
+            prediction,
             str(hometeam.airballformat(True, currentdate, MINGAMES)),
-            str(awayteam.airballformat(False, currentdate, MINGAMES),
-            hometeambettingline, awayteambettingline)))
+            str(awayteam.airballformat(False, currentdate, MINGAMES)),
+            hometeambettingline, awayteambettingline))
         
     db.AddPredictions(
             currentdate, predictions)
     
-db.setdailyscriptparameters()
+#db.setdailyscriptparameters()
 print("** Completed **")
 
 
