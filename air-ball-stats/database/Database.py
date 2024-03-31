@@ -1,9 +1,9 @@
-from datetime import date
+from datetime import date, timedelta
 from model.NbaSeasonStats import NbaSeasonStats
 from model.DailyScriptParameters import DailyScriptParameters
 from model.Prediction import Prediction
 from database.AwsTableDb import AwsTableDb
-from utility.dates import dateToDashesString
+from utility.dates import dateToDashesString, slashesStringToDate, dateToSlashesString
 
 class Database:
     def __init__(self):
@@ -21,16 +21,20 @@ class Database:
             print(f'Sucessfully Loaded: {parameters}')
         except:
             raise Exception(f'Parameters unable to be loaded')
-        
+        self.parameters = parameters
         self.year = parameters.seasonyear
         self.firstdayofseason = parameters.firstdayofseason
         self.startdate = parameters.startdate
         self.enddate = parameters.enddate
 
-    def setdailyscriptparameters(self, data: DailyScriptParameters) -> None:
+    def setdailyscriptparameters(self) -> None:
+        self.parameters.enddate = dateToSlashesString(
+            slashesStringToDate(self.parameters.enddate) + timedelta(days=1))
+        self.parameters.startdate = self.parameters.enddate
+        
         try:
-            self.db.setTableConfig(data.to_json())
-            print(f'Successfully Set: {data}')
+            self.db.setTableConfig(self.parameters.to_json())
+            print(f'Successfully Set: {self.parameters}')
         except:
             raise Exception(f'Parameters unable to be loaded')
     
@@ -43,6 +47,8 @@ class Database:
 
         if not result:
             return NbaSeasonStats(teamname, self.year)
+        else:
+            return NbaSeasonStats.from_json(result)
 
     def EditTeamInDatabase(self, teamname: str, 
                            seasonstats: NbaSeasonStats) -> None:

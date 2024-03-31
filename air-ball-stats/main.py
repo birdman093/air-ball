@@ -2,7 +2,6 @@
 Kicks off on AWS at 3am
 '''
 #python
-import numpy as np, pandas as pd
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 # internal 
@@ -12,12 +11,16 @@ from model.Prediction import Prediction
 from database.Database import Database
 from service.NbaApi import NbaApi
 from service.AirBallApi import AirBallApi
+from service.BettingLine import NbaBettingLine
 from utility.dates import *
+
+MINGAMES = 10
 
 ###### Server Update Script - Run daily at 3am #######
 db: Database = Database()
 nbaApi: NbaApi = NbaApi(db.year) 
 airBallApi: AirBallApi = AirBallApi()
+nbaBettingLine = NbaBettingLine()
 currentdate = slashesStringToDate(db.startdate) 
 enddate = slashesStringToDate(db.enddate) 
 WINPCTTOLERANCE = .001
@@ -56,19 +59,36 @@ while currentdate <= enddate:
 
     # make predictions for next day
     nextdaygames: list[dict[str,str]] = airBallApi.getGames(currentdate)
-    
+    bettingline: dict = nbaBettingLine.get_game_lines()
     predictions: list[Prediction] = []
     for game in nextdaygames:
         hometeam = db.GetTeamFromDatabase(game[nbaApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[nbaApi.AWAY])
-        prediction = airBallApi.makePrediction(hometeam, awayteam, currentdate)
-        predictions.append(Prediction(hometeam.name, awayteam.name, prediction))
+        prediction = airBallApi.makePrediction(
+            hometeam, awayteam, currentdate, MINGAMES)
+        
+        currentdatedashes = datetime.strptime(currentdate, "%Y-%m-%d")
+        todatedatedashes = datetime.strptime(date.today(), "%Y-%m-%d")
+        if currentdatedashes == todatedatedashes:
+            spreads = nbaBettingLine.get_game_lines()
+            hometeambettingline = bettingline.get(spreads.get(hometeam.name))
+            awayteambettingline = bettingline.get(spreads.get(awayteam.name))
+        else:
+            hometeambettingline = ""
+            awayteambettingline = ""
+
+        predictions.append(Prediction(
+            hometeam.name, hometeam.gamesplayed() - 1, 
+            awayteam.name, awayteam.gamesplayed() - 1,
+            {}, prediction,
+            str(hometeam.airballformat(True, currentdate, MINGAMES)),
+            str(awayteam.airballformat(False, currentdate, MINGAMES),
+            hometeambettingline, awayteambettingline)))
         
     db.AddPredictions(
             currentdate, predictions)
     
-#TODO: Update Daily Script Parameters
-    
+db.setdailyscriptparameters()
 print("** Completed **")
 
 

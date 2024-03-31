@@ -1,14 +1,21 @@
 import json
 from datetime import date
+from model.NbaSeasonStats import NbaSeasonStats
 
 class Prediction:
     
-    def __init__(self, hometeamname: str, awayteamname: str,
-                 prediction: dict):
+    def __init__(self, hometeamname: str, hometeamgames: int, awayteamname: str,
+                 awayteamgames: int, line: dict, prediction: dict,
+                 hometeaminput: str, awayteaminput: str):
         self.hometeamname = hometeamname
+        self.hometeamgames = hometeamgames
         self.awayteamname = awayteamname
+        self.awayteamgames = awayteamgames
         self.plus_minus = "home_team_plus_minus"
-        self.hometeamplusminus = prediction[self.plus_minus]
+        self.hometeamplusminusprediction = prediction[self.plus_minus]
+        self.hometeam = hometeaminput
+        self.awayteam = awayteaminput
+        #self.hometeamplusminusline = line[self.plus_minus]
 
     def __str__(self):
         return (f"Prediction(home: {self.hometeamname}," +

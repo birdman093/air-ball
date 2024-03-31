@@ -44,15 +44,15 @@ class AirBallApi:
         return games
     
     def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats,
-                       date: date) -> dict:
+                       date: date, mingames: int) -> dict:
         '''
         air-ball sample response -- 
         {"home_team_plus_minus_predictions":
         [{"home_team_plus_minus":1.6254919885342773}]}
         '''
         url = os.getenv('AIR_BALL_PREDICTION_URL')
-        payload = {"games" : [home.airballformat(True, date) 
-                              | away.airballformat(False, date)]}
+        payload = {"games" : [home.airballformat(True, date, mingames) 
+                              | away.airballformat(False, date, mingames)]}
         
         try:
             response = requests.post(url, json=payload).json()

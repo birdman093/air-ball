@@ -3,6 +3,9 @@ from datetime import date, datetime
 def slashesStringToDate(date: str) -> date:
     return datetime.strptime(date, '%m/%d/%Y').date()  
 
+def dashesStringToDate(date: str) -> date:
+    return datetime.strptime(date, '%Y-%m-%d').date()  
+
 def dateToSlashesString(date_obj: date) -> str:
     return date_obj.strftime('%m/%d/%Y')
 

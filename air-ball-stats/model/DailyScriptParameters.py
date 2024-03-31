@@ -5,17 +5,15 @@ class DailyScriptParameters:
         self.seasonyear = '2023-24'
         self.firstdayofseason = True 
         self.startdate = '10/24/2023'
-        self.enddate = '10/24/2023'
-        self.predictiondate = '10/25/2023'
+        self.enddate = '10/30/2023'
 
     def to_json(self):
         return json.dumps(self.__dict__)
     
-    def update_dates(self, startdate, enddate, predictiondate):
+    def update_dates(self, startdate, enddate):
         self.firstdayofseason = False
         self.startdate = startdate
         self.enddate = enddate
-        self.predictiondate = predictiondate
 
     @classmethod
     def from_json(cls, json_str):

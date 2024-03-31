@@ -67,10 +67,14 @@ class AwsTableDb:
         response = self.dynamodb.get_item(
             TableName=self.teamtable,
             Key={
-                'teamName': {'S': self.partitionkey}
+                self.partitionkey: {'S': partitionkey}
             }
         )
-        return response.get('Item', None)
+        response = response.get('Item', None)
+        if response and 'data' in response and 'S' in response['data']:
+            return json.loads(response['data']['S'])
+        else:
+            return None
     
     def getAllFromDbExceptConfig(self) -> list[str]:
         # Scan operation with a filter expression to exclude the config item
@@ -86,11 +90,11 @@ class AwsTableDb:
         processedItems = [json.loads(item['data']['S']) for item in items]
         return processedItems
 
-    def getTableConfig(self) -> str:
+    def getTableConfig(self) -> dict:
         response = self.dynamodb.get_item(
             TableName=self.teamtable,
             Key={
-                'teamName': {'S': self.configpartitionvalue}
+                self.partitionkey: {'S': self.configpartitionvalue}
             }
         )
         return response.get('Item', None)
