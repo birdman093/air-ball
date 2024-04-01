@@ -1,8 +1,14 @@
-import { apiGame } from "@/datatypes/apigame";
+import { nbaGame, createNbaGame } from "@/datatypes/apigame";
+import { isDateToday } from "@/util/date";
+import { create } from "domain";
 
-export const nbaodds = async () => {
+export const NbaOdds = async (gameDate: string) => {
+    // Currently odds only work on current day
+    if (!isDateToday(gameDate)) {
+        return []
+    }
+
     const nbakey = "basketball_nba";
-
     const url = `https://odds.p.rapidapi.com/v4/sports/${nbakey}/odds?regions=us&oddsFormat=decimal&markets=spreads&dateFormat=iso`;
     const options: RequestInit = {
         method: 'GET',
@@ -12,35 +18,31 @@ export const nbaodds = async () => {
          } as HeadersInit
     };
 
-    let result;
     try {
         const response = await fetch(url, options);
-        result = await response.json();
+        const result = await response.json();
+        return ProcessNbaOdds(result)
     } catch (error) {
         console.error(error);
-    }
+        return ProcessNbaOdds([])
+    } 
+}
 
-    let apiGames: apiGame[] = []
+const ProcessNbaOdds = (result: any) => {
+    let nbaGamesWithOdds: nbaGame[] = []
     result.forEach(function(game: any) {
         let homelineprice = -1; let awaylineprice = -1; let spread = -1; let favorite = "";
         try {
             const draftkings = game.bookmakers.find((booker: any) => booker['key'] === 'draftkings');
             const spreads = draftkings.markets[0]['outcomes'];
 
-            console.log(game.home_team == spreads[0].name)
-
             if (spreads[0].name == game.home_team) {
                 homelineprice = spreads[0].price
                 awaylineprice = spreads[1].price
+                spread = spreads[0].point
             } else {
                 homelineprice = spreads[1].price
                 awaylineprice = spreads[0].price
-            }
-            spread = Math.min(spreads[0].point, spreads[1].point)
-            if (spread == spreads[0].point) {
-                favorite = spreads[0].name;
-            } else {
-                favorite = spreads[1].name;
             }
         }
         catch {
@@ -49,18 +51,17 @@ export const nbaodds = async () => {
             return;
         }
 
-        let newGame: apiGame = {
+        const newGame: nbaGame = createNbaGame({
             hometeam: game.home_team,
             awayteam: game.away_team,
             gametime: game.commence_time,
-            line: spread,
-            favorite: favorite,
+            hometeamline: spread,
             homelineprice: homelineprice, 
             awaylineprice: awaylineprice
-            };
+            });
         
-        apiGames.push(newGame)
+        nbaGamesWithOdds.push(newGame)
     });
     
-    return apiGames
+    return nbaGamesWithOdds
 }

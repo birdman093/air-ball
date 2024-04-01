@@ -2,17 +2,17 @@ import { ReactElement, useEffect, useState } from 'react'
 import type { InferGetStaticPropsType, GetStaticProps } from 'next'
 import Layout from '../components/layout'
 import type { NextPageWithLayout } from './_app'
-import { apiGame } from '@/datatypes/apigame'
-import { nbagames } from '@/services/games/nbagames'
+import { nbaGame } from '@/datatypes/apigame'
 import { todayDate } from '@/util/date'
 import '../styles/today.css'
+import { NbaGamesByDate } from '@/services/NbaGamesByDate'
 
 export const getStaticProps = (async (context) => {
   const today = todayDate();
-  const todaygames: apiGame[] = await nbagames(today);
+  const todaygames: nbaGame[] = await NbaGamesByDate(today);
   return { props: { todaygames } }
 }) satisfies GetStaticProps<{
-  todaygames: apiGame[]
+  todaygames: nbaGame[]
 }>
 
 export default function Today({
@@ -20,7 +20,7 @@ export default function Today({
 }: InferGetStaticPropsType<typeof getStaticProps>)
 {
   
-  const [games, setGames] = useState<apiGame[]>([])
+  const [games, setGames] = useState<nbaGame[]>([])
   const today = todayDate();
 
   useEffect(() => {
@@ -47,8 +47,8 @@ export default function Today({
         <tr key={index}>
           <td>{game.awayteam}@{game.hometeam}</td>
           <td>{new Date(game.gametime).toLocaleTimeString()}</td>
-          <td>{game.favorite} {game.line}</td>
-          <td>N/A</td>
+          <td>{game.hometeam} {game.hometeamline}</td>
+          <td>{game.hometeam} {game.homeairballline} </td>
         </tr>
         ))}
     </tbody>

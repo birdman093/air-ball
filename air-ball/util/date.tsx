@@ -5,7 +5,7 @@ export const todayDate = () => {
     '-' + String(today.getDate()).padStart(2, '0');
 }
 
-export const nbaAPIDate = (today: string) => {
+export const nbaGamesDate = (today: string) => {
     // Parse the date string
     const dateParts = today.split('-');
     const year = parseInt(dateParts[0], 10);
@@ -14,7 +14,7 @@ export const nbaAPIDate = (today: string) => {
 
     // Create a new Date object and add one day
     const date = new Date(year, month, day);
-    date.setDate(date.getDate() + 1);
+    date.setDate(date.getDate()); // NOTE: removed + 1 day for now
 
     // Format the new date back into a string
     const nextDayString = date.getFullYear() + '-' + 
@@ -23,3 +23,14 @@ export const nbaAPIDate = (today: string) => {
 
     return nextDayString;
 }
+
+export const isDateToday = (gameDate: string) => {
+    // Get today's date
+    const today = new Date();
+  
+    // Convert today to string format "YYYY-MM-DD"
+    const todayStr = today.toISOString().split('T')[0];
+  
+    // Compare the input date string to today's date string
+    return gameDate === todayStr;
+  };
