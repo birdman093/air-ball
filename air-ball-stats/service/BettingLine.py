@@ -30,4 +30,5 @@ class NbaBettingLine:
                         if market['key'] == 'spreads':
                             for outcome in market['outcomes']:
                                 points[outcome["name"]] = outcome['point']
+        print(f'{len(points)} NBA Game Odds loaded')
         return points

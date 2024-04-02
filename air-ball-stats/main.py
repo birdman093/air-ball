@@ -26,7 +26,7 @@ enddate = slashesStringToDate(db.enddate)
 WINPCTTOLERANCE = .001
 
 while currentdate <= enddate:
-    currentdategames = nbaApi.getgamesondate(dateToSlashesString(currentdate))
+    currentdategames = nbaApi.getPlayedGamesOnDate(dateToSlashesString(currentdate))
 
     for game in currentdategames.values():
         home_game: NbaGameStats = game[nbaApi.HOME]
@@ -58,7 +58,7 @@ while currentdate <= enddate:
     currentdate += timedelta(days=1)
 
     # make predictions for next day
-    nextdaygames: list[dict[str,str]] = airBallApi.getGames(currentdate)
+    nextdaygames: list[dict[str,str]] = airBallApi.getUnPlayedGamesOnDate(currentdate)
     bettingline: dict = nbaBettingLine.get_game_lines()
     predictions: list[Prediction] = []
     for game in nextdaygames:

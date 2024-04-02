@@ -2,10 +2,15 @@ import json
 
 class DailyScriptParameters:
     def __init__(self):
+        '''
+        Data Collection Configuration - Aggregates data for seasonyear from\n
+        startdate to endate (inclusive) -- games must have been played for\n
+        aggregation to occur.
+        '''
         self.seasonyear = '2023-24'
         self.firstdayofseason = True 
-        self.startdate = '03/31/2024'
-        self.enddate = '03/31/2024'
+        self.startdate = '04/01/2024'  
+        self.enddate = '04/01/2024'
 
     def to_json(self):
         return json.dumps(self.__dict__)

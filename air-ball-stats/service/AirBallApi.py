@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
 from model.NbaSeasonStats import NbaSeasonStats
-from utility.dates import dateToDashesString
+from utility.dates import dateToDashesString, convertUTCtoPSTtoDashesString
 
 class AirBallApi:
     def __init__(self):
@@ -14,14 +14,30 @@ class AirBallApi:
         env_path = os.path.join(script_dir, 'credentials', '.env.local')
         load_dotenv(env_path)
 
-    def getGames(self, date: date) -> list[dict[str, str]]:
+    def getUnPlayedGamesOnDate(self, date: date) -> list[dict[str, str]]:
         '''
-        All games on day
+        Get nba games by date\n  
+        Return: [['home': {hometeamname}, 'away': {awayteamname}]]\n
+        Accesses unplayed games only
         '''
-        next_day = date + timedelta(days=1)
-        today_api_date = dateToDashesString(next_day)
-
-        url = f"https://api-nba-v1.p.rapidapi.com/games?date={today_api_date}"
+        dayofgame = dateToDashesString(date)
+        data = self.getGamesRequest(dayofgame) + \
+        self.getGamesRequest(dateToDashesString(date + timedelta(days=1)))
+        
+        games = []
+        for game in data:
+            gameday = convertUTCtoPSTtoDashesString(game['date']['start'])
+            if gameday == dayofgame:
+                hometeam = game['teams']['home']['name']
+                awayteam = game['teams']['visitors']['name']
+                print(f'{awayteam} @ {hometeam}')
+                games.append({self.HOME : hometeam,
+                            self.AWAY : awayteam})
+        print(f'{len(data)} API-NBA-V1 Games loaded for {date}')
+        return games
+    
+    def getGamesRequest(self, date):
+        url = f"https://api-nba-v1.p.rapidapi.com/games?date={date}"
         headers = {
             'X-RapidAPI-Key': os.getenv('NEXT_PUBLIC_RAPIDAPI_KEY'),
             'X-RapidAPI-Host': os.getenv('NEXT_PUBLIC_RAPIDAPI_NBA_HOST')
@@ -30,18 +46,9 @@ class AirBallApi:
         try: 
             response = requests.get(url, headers=headers)
             data = response.json()['response']
-            print(f'{len(data)} API-NBA-V1 Games loaded from {date}')
         except: 
             raise Exception(f'Failed to retrieve API-NBA-V1 Games on {date}')
-        
-        games = []
-        for game in data:
-            hometeam = game['teams']['home']['name']
-            awayteam = game['teams']['visitors']['name']
-            print(f'{awayteam} @ {hometeam}')
-            games.append({self.HOME : hometeam,
-                          self.AWAY : awayteam})
-        return games
+        return data
     
     def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats,
                        date: date, mingames: int) -> dict:
