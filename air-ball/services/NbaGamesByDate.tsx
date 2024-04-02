@@ -1,5 +1,5 @@
 import { nbaGame, createNbaGame } from "@/datatypes/apigame";
-import { nbaGamesDate as nbaGamesApiDate } from "@/util/date";
+import { nbaGamesNextDayDate as nbaGamesApiDate } from "@/util/date";
 import { NbaOdds } from "./NbaOdds";
 import { AirBall } from "./Airball";
 import { mergeNbaApis } from "@/util/mergeNbaApis";

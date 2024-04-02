@@ -5,24 +5,25 @@ export const todayDate = () => {
     '-' + String(today.getDate()).padStart(2, '0');
 }
 
-export const nbaGamesDate = (today: string) => {
-    // Parse the date string
-    const dateParts = today.split('-');
-    const year = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1; // Month is 0-indexed in JavaScript Date
-    const day = parseInt(dateParts[2], 10);
+export const nbaGamesNextDayDate = (today: string) => {
+    const date = new Date(today);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0];
+};
 
-    // Create a new Date object and add one day
-    const date = new Date(year, month, day);
-    date.setDate(date.getDate()); // NOTE: removed + 1 day for now
+export const convertUTCtoPSTString = (utcString: string): string => {
+  // Create a Date object from the UTC string
+  const utcDate = new Date(utcString);
+  const pstDateString = utcDate.toLocaleString("en-US", {
+      timeZone: "America/Los_Angeles",
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+  });
+  const [month, day, year] = pstDateString.split('/');
+  return `${year}-${month}-${day}`;
+};
 
-    // Format the new date back into a string
-    const nextDayString = date.getFullYear() + '-' + 
-                          String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-                          String(date.getDate()).padStart(2, '0');
-
-    return nextDayString;
-}
 
 export const isDateToday = (gameDate: string) => {
     // Get today's date

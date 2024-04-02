@@ -1,10 +1,19 @@
-import { nbaGame } from "@/datatypes/apigame";
+import { createNbaGame, nbaGame } from "@/datatypes/apigame";
 import AWS from 'aws-sdk';
 
 
 export const AirBall = async (gameDate : string) => {
-    getPredictionData(gameDate);
-
+    const predictions = await getPredictionData(gameDate);
+    if (predictions?.length === 0 || !predictions) {return [];}
+    let games: nbaGame[] = (predictions[0].data).map((prediction: any) => {
+        const json = JSON.parse(prediction);
+        return createNbaGame({
+            hometeam: json.hometeamname,
+            awayteam: json.awayteamname,
+            homeairballline: json.hometeamplusminusprediction
+        });
+    });
+    return games
 }
 
 const getPredictionData = async (gameDate: string) => {
@@ -21,10 +30,10 @@ const getPredictionData = async (gameDate: string) => {
 
     try {
         const response = await dynamoDb.query(params).promise();
-        console.log('Success:', response.Items);
         return response.Items;
     } catch (error) {
         console.error('Error:', error);
+        return []
     }
     
 };

@@ -2,7 +2,6 @@ import { nbaGame } from "@/datatypes/apigame";
 
 export const mergeNbaApis = (games: nbaGame[], 
     odds: nbaGame[], airBall: nbaGame[])=> {
-
         for (const game of games) {
             const hometeam = game.hometeam;
             const awayteam = game.awayteam;
