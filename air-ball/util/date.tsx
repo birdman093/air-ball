@@ -1,9 +1,15 @@
-export const todayDate = () => {
-    const today = new Date()
-    return  today.getFullYear() + '-' + 
-    String(today.getMonth() + 1).padStart(2, '0') + 
-    '-' + String(today.getDate()).padStart(2, '0');
-}
+export const todayDate = (maxDateString: string) => {
+    const today = new Date();
+    const maxDate = new Date(maxDateString);
+    
+    // If today is greater than maxDate, use maxDate instead
+    const effectiveDate = today > maxDate ? maxDate : today;
+
+    return effectiveDate.getFullYear() + '-' + 
+    String(effectiveDate.getMonth() + 1).padStart(2, '0') + 
+    '-' + String(effectiveDate.getDate()).padStart(2, '0');
+};
+
 
 export const nbaGamesNextDayDate = (today: string) => {
     const date = new Date(today);

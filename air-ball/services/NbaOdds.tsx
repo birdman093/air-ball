@@ -43,6 +43,7 @@ const ProcessNbaOdds = (result: any) => {
             } else {
                 homelineprice = spreads[1].price
                 awaylineprice = spreads[0].price
+                spread = spreads[1].point
             }
         }
         catch {
