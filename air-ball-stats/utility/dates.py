@@ -17,3 +17,7 @@ def convertUTCtoPSTtoDashesString(utc_time_str: str) -> str:
     utc_time = datetime.strptime(utc_time_str, "%Y-%m-%dT%H:%M:%S.%fZ").replace(tzinfo=pytz.utc)
     la_time = utc_time.astimezone(pytz.timezone('America/Los_Angeles'))
     return dateToDashesString(la_time)
+
+def get_today_date_PST() -> date:
+    local_timezone = pytz.timezone('America/Los_Angeles')  # Example: 'America/Los_Angeles'
+    return datetime.now(local_timezone)

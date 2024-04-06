@@ -67,12 +67,13 @@ while currentdate <= enddate:
         prediction = airBallApi.makePrediction(
             hometeam, awayteam, currentdate, MINGAMES)
         
-        currentdatedashes = currentdate.strftime("%Y-%m-%d")
-        todaydatedashes = date.today().strftime("%Y-%m-%d")
+        currentdatedashes = dateToDashesString(currentdate)
+        todaydatedashes = dateToDashesString(get_today_date_PST())
         if currentdatedashes == todaydatedashes:
             spreads = nbaBettingLine.get_game_lines()
             hometeambettingline = bettingline.get(spreads.get(hometeam.name))
             awayteambettingline = bettingline.get(spreads.get(awayteam.name))
+            print(f'Added Betting Line for {awayteam.name} @ {hometeam.name}')
         else:
             hometeambettingline = ""
             awayteambettingline = ""
