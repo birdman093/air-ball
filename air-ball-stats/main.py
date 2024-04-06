@@ -13,6 +13,7 @@ from service.NbaApi import NbaApi
 from service.AirBallApi import AirBallApi
 from service.BettingLine import NbaBettingLine
 from utility.dates import *
+from scripts.logos import *
 
 MINGAMES = 10
 
@@ -62,8 +63,8 @@ while currentdate <= enddate:
     bettingline: dict = nbaBettingLine.get_game_lines()
     predictions: list[Prediction] = []
     for game in nextdaygames:
-        hometeam = db.GetTeamFromDatabase(game[nbaApi.HOME])
-        awayteam = db.GetTeamFromDatabase(game[nbaApi.AWAY])
+        hometeam = db.GetTeamFromDatabase(game[airBallApi.HOME])
+        awayteam = db.GetTeamFromDatabase(game[airBallApi.AWAY])
         prediction = airBallApi.makePrediction(
             hometeam, awayteam, currentdate, MINGAMES)
         
@@ -77,7 +78,6 @@ while currentdate <= enddate:
         else:
             hometeambettingline = ""
             awayteambettingline = ""
-
         predictions.append(Prediction(
             hometeam.name, hometeam.gamesplayed(), 
             awayteam.name, awayteam.gamesplayed(),

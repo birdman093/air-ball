@@ -34,7 +34,7 @@ class NbaApi:
                 f'date_to_nullable = {slashesDate}')
 
         uniquegameids = {}
-        for index, game in currentdategames.iterrows():
+        for _, game in currentdategames.iterrows():
             teamside = self.AWAY if '@' in game['MATCHUP'] else self.HOME
 
             if game['GAME_ID'] not in uniquegameids:

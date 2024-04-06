@@ -33,6 +33,8 @@ class AirBallApi:
                 print(f'{awayteam} @ {hometeam}')
                 games.append({self.HOME : hometeam,
                             self.AWAY : awayteam})
+                            # f'{self.HOME}_url' : game['teams']['home']['logo'],
+                            # f'{self.AWAY}_url' : game['teams']['visitors']['logo']})
         print(f'{len(data)} API-NBA-V1 Games loaded for {date}')
         return games
     

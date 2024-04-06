@@ -16,6 +16,7 @@ class NbaSeasonStats:
         self.name: str = name
         self.year: str = year
         self.abbreviation: str = ''
+        self.logo_url: str = ''
 
         # cumulative stats
         self.wins: int = 0

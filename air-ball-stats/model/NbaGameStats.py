@@ -32,5 +32,3 @@ class NbaGameStats:
         self.tov = df['TOV']
         self.pf = df['PF']
         self.plus_minus = df['PLUS_MINUS']
-
-        
