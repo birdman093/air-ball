@@ -86,3 +86,13 @@ class Database:
             print(f'{len(predictions)} Predictions Created in Database')
         except:
             raise Exception(f'Create Prediction Failed for {date} and {predictions}')
+        
+    def GetPredictionByDate(self, date: date) -> list[Prediction]: 
+        dateDashes = dateToDashesString(date)
+        try:
+            results: list[str] = self.db.getPredictions(dateDashes)
+            predictions = [ Prediction.from_json(res) for res in results]
+            print(f'{len(predictions)} Predictions Retrieved from Database')
+            return predictions
+        except:
+            raise Exception(f'Prediction Loading Failed for {dateDashes}')

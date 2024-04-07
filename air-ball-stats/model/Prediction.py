@@ -3,22 +3,20 @@ from datetime import date
 from model.NbaSeasonStats import NbaSeasonStats
 
 class Prediction:
-    
-    def __init__(self, hometeamname: str, hometeamgames: int, awayteamname: str,
-                 awayteamgames: int, prediction: dict,
-                 hometeaminput: str, awayteaminput: str,
-                 hometeamline: str, awayteamline: str):
+    def __init__(self, hometeamname: str = "", hometeamgames: int = 0, 
+                 awayteamname: str = "", awayteamgames: int = 0, 
+                 prediction: dict = {}, hometeamlineodds: float = 0,
+                 hometeaminput: str = "", awayteaminput: str = ""):
         self.hometeamname = hometeamname
         self.hometeamgames = hometeamgames
         self.awayteamname = awayteamname
         self.awayteamgames = awayteamgames
-        self.plus_minus = "home_team_plus_minus"
-        self.hometeamplusminusprediction = prediction[self.plus_minus]
+        self.plus_minus: str = "home_team_plus_minus"
+        self.hometeamplusminusprediction: float = prediction.get(self.plus_minus, 999)
+        self.hometeamplusminusresult: float = 0
+        self.hometeamlineodds: float = hometeamlineodds
         self.hometeaminput = hometeaminput
         self.awayteaminput = awayteaminput
-        self.hometeamline = hometeamline
-        self.awayteamline = awayteamline
-        #self.hometeamplusminusline = line[self.plus_minus]
 
     def __str__(self):
         return (f"Prediction(home: {self.hometeamname}," +

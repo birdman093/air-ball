@@ -14,6 +14,7 @@ from service.AirBallApi import AirBallApi
 from service.BettingLine import NbaBettingLine
 from utility.dates import *
 from scripts.logos import *
+from core.Predictions import MakePredictionsForDay
 
 MINGAMES = 10
 
@@ -29,20 +30,27 @@ WINPCTTOLERANCE = .001
 while currentdate <= enddate:
     currentdategames = nbaApi.getPlayedGamesOnDate(dateToSlashesString(currentdate))
 
+    yesterday_predictions: list[Prediction] = db.GetPredictionByDate(currentdate)
     for game in currentdategames.values():
+        # update daily stats
         home_game: NbaGameStats = game[nbaApi.HOME]
         away_game: NbaGameStats = game[nbaApi.AWAY]
-        
         home_season: NbaSeasonStats = db.GetTeamFromDatabase(home_game.team_name)
         away_season: NbaSeasonStats = db.GetTeamFromDatabase(away_game.team_name)
-
         home_season.updateteamstats(home_game, True)
         home_season.updateopponentstats(away_game, away_season.rank)
         away_season.updateteamstats(away_game, False)
         away_season.updateopponentstats(home_game, home_season.rank)
-
         db.EditTeamInDatabase(home_game.team_name, home_season)
         db.EditTeamInDatabase(away_game.team_name, away_season)
+
+        # update yesterday's predictions
+        for prediction in yesterday_predictions:
+            if prediction.hometeamname == home_game.team_name \
+            and prediction.awayteamname == away_game.team_name:
+                prediction.hometeamplusminusresult = home_game.plus_minus
+            
+    db.AddPredictions(currentdate, yesterday_predictions)
     
     # sos and rank daily cumulative stats
     team: NbaSeasonStats
@@ -59,40 +67,7 @@ while currentdate <= enddate:
     currentdate += timedelta(days=1)
 
     # make predictions for next day
-    nextdaygames: list[dict[str,str]] = airBallApi.getUnPlayedGamesOnDate(currentdate)
-    bettingline: dict = nbaBettingLine.get_game_lines()
-    predictions: list[Prediction] = []
-    for game in nextdaygames:
-        hometeam = db.GetTeamFromDatabase(game[airBallApi.HOME])
-        awayteam = db.GetTeamFromDatabase(game[airBallApi.AWAY])
-        prediction = airBallApi.makePrediction(
-            hometeam, awayteam, currentdate, MINGAMES)
-        
-        currentdatedashes = dateToDashesString(currentdate)
-        todaydatedashes = dateToDashesString(get_today_date_PST())
-        if currentdatedashes == todaydatedashes:
-            spreads = nbaBettingLine.get_game_lines()
-            hometeambettingline = bettingline.get(spreads.get(hometeam.name))
-            awayteambettingline = bettingline.get(spreads.get(awayteam.name))
-            print(f'Added Betting Line for {awayteam.name} @ {hometeam.name}')
-        else:
-            hometeambettingline = ""
-            awayteambettingline = ""
-        predictions.append(Prediction(
-            hometeam.name, hometeam.gamesplayed(), 
-            awayteam.name, awayteam.gamesplayed(),
-            prediction,
-            str(hometeam.airballformat(True, currentdate, MINGAMES)),
-            str(awayteam.airballformat(False, currentdate, MINGAMES)),
-            hometeambettingline, awayteambettingline))
-        
-    db.AddPredictions(
-            currentdate, predictions)
+    MakePredictionsForDay(airBallApi, nbaBettingLine, db, currentdate)
     
 #db.setdailyscriptparameters()
 print("** Completed **")
-
-
-
-
-

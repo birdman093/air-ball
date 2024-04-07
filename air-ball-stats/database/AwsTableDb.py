@@ -117,4 +117,18 @@ class AwsTableDb:
             }
         )
 
+    def getPredictions(self, dateDashes: str) -> list[str]:
+        print(dateDashes)
+        response = self.dynamodb.get_item(
+            TableName=self.prediction_table,
+            Key={
+                self.prediction_partitionkey: {'S': dateDashes}
+            }
+        )
+        response = response.get('Item', None)
+        if response and 'data' in response and 'L' in response['data']:
+            return [ result['S'] for result in response['data']['L']]
+        else:
+            return None
+
     
