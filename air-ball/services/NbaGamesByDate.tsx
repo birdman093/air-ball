@@ -13,3 +13,9 @@ export const NbaGamesByDate = async (gameDate: string) => {
     return mergeNbaApis(nbaGames, nbaGamesWithOdds, nbaGamesWithAirBall)
 }
 
+export const PastNbaGamesByDate = async (gameDate: string) => {
+    const nbaGamesWithAirBall = await AirBall(gameDate);
+    console.log(nbaGamesWithAirBall)
+    return nbaGamesWithAirBall;
+}
+

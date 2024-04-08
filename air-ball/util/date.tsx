@@ -10,6 +10,19 @@ export const todayDate = (maxDateString: string) => {
     '-' + String(effectiveDate.getDate()).padStart(2, '0');
 };
 
+export const yesterdayDate = (maxDateString: string) => {
+    const today = new Date();
+    today.setDate(today.getDate() - 1);
+    const maxDate = new Date(maxDateString);
+    
+    // If today is greater than maxDate, use maxDate instead
+    const effectiveDate = today > maxDate ? maxDate : today;
+
+    return effectiveDate.getFullYear() + '-' + 
+    String(effectiveDate.getMonth() + 1).padStart(2, '0') + 
+    '-' + String(effectiveDate.getDate()).padStart(2, '0');
+};
+
 
 export const nbaGamesNextDayDate = (today: string) => {
     const date = new Date(today);

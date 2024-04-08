@@ -7,6 +7,7 @@ export type nbaGame = {
     awayteamimageurl: string, 
     gametime: string,
     hometeamline: number,
+    hometeamresult: number,
     homelineprice: number,
     awaylineprice: number,
     homeairballline: number
@@ -23,6 +24,7 @@ export function createNbaGame(gameData: Partial<nbaGame>): nbaGame {
       awayteamimageurl: "N/A",
       gametime: "00:00",
       hometeamline: 9999,
+      hometeamresult: 9999,
       homelineprice: 0,
       awaylineprice: 0,
       homeairballline: 9999

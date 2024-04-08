@@ -10,6 +10,8 @@ export const AirBall = async (gameDate : string) => {
         return createNbaGame({
             hometeam: json.hometeamname,
             awayteam: json.awayteamname,
+            hometeamresult: -1 & json.hometeamplusminusresult, // Converts to line
+            hometeamline: json.hometeamplusminusodds || 999,
             homeairballline: -1 * json.hometeamplusminusprediction //Converts to line
         });
     });
