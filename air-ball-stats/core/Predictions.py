@@ -29,13 +29,11 @@ def MakePredictionsForDay(airBallApi : AirBallApi,
         
         currentdatedashes = dateToDashesString(currentdate)
         todaydatedashes = dateToDashesString(get_today_date_PST())
+        hometeambettingline = 999
         if currentdatedashes == todaydatedashes:
-            spreads = nbaBettingLine.get_game_lines()
-            hometeambettingline = bettingline.get(spreads.get(hometeam.name))
-            awayteambettingline = bettingline.get(spreads.get(awayteam.name))
-            print(f'Added Betting Line for {awayteam.name} @ {hometeam.name}')
-        else:
-            hometeambettingline = ""
+            hometeambettingline = bettingline.get(hometeam.name)
+            print(f'Added Betting Line for {awayteam.name} @ {hometeam.name} {hometeambettingline}')
+
         predictions.append(Prediction(
             hometeam.name, hometeam.gamesplayed(), 
             awayteam.name, awayteam.gamesplayed(),

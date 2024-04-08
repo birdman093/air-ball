@@ -20,7 +20,7 @@ class Prediction:
 
     def __str__(self):
         return (f"Prediction(home: {self.hometeamname}," +
-        f"away: {self.awayteamname}, prediction: {self.hometeamplusminus})")
+        f"away: {self.awayteamname}, prediction: {self.hometeamplusminusprediction})")
 
     def to_json(self):
         return json.dumps(self.__dict__)

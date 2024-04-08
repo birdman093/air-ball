@@ -7,7 +7,7 @@ class NbaBettingLine:
         env_path = os.path.join(script_dir, 'credentials', '.env.local')
         load_dotenv(env_path)
 
-    def get_game_lines(self):
+    def get_game_lines(self) -> dict[str, float]:
         nbakey = "basketball_nba"
         url = f"https://odds.p.rapidapi.com/v4/sports/{nbakey}/odds?regions=us&oddsFormat=decimal&markets=spreads&dateFormat=iso"
         headers = {
@@ -29,6 +29,6 @@ class NbaBettingLine:
                     for market in bookmaker['markets']:
                         if market['key'] == 'spreads':
                             for outcome in market['outcomes']:
-                                points[outcome["name"]] = outcome['point']
+                                points[outcome["name"]] = float(outcome['point'])
         print(f'{len(points)} NBA Game Odds loaded')
         return points
