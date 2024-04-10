@@ -3,11 +3,13 @@
   display: flex;
   justify-content: space-between;
   list-style-type: none;
+  padding-left: 0vw;
+  padding-right: 5vw;
   padding: 0 5vw;
   align-items: center;
   background-color: var(--header-bg-color);
   margin-bottom: 0px;
-  margin-left: 1%;
+  margin-left: 0%;
   margin-right: 1%;
   border-radius: 8px;
   border-style: solid;
@@ -15,7 +17,10 @@
 }
 
 .navBar li {
-  padding: 2vw;
+  padding-left: 0;
+  padding-right: 2vw;
+  padding-top: 2vw;
+  padding-bottom: 2vw;
 }
 
 .navBar a {

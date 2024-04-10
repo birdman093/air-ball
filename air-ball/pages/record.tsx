@@ -5,7 +5,7 @@ import { nbaGame } from '@/datatypes/apigame';
 import { yesterdayDate } from '@/util/date';
 import '../styles/today.css';
 import { PastNbaGamesByDate } from '@/services/NbaGamesByDate';
-import { pastGameTable } from '@/components/pastGameTable';
+import { pastGameTable } from '@/components/gameTable';
 import { NextPageWithLayout } from './_app';
 import { useRouter } from 'next/router';
 
