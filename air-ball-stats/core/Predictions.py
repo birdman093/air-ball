@@ -18,17 +18,18 @@ def MakePredictionsForDay(airBallApi : AirBallApi,
                           nbaBettingLine: NbaBettingLine, 
                           db: Database, 
                           currentdate: date):
+    print('*** Making Predictions ***')
     nextdaygames: list[dict[str,str]] = airBallApi.getUnPlayedGamesOnDate(currentdate)
     bettingline: dict = nbaBettingLine.get_game_lines()
     predictions: list[Prediction] = []
+    todaydatedashes = dateToDashesString(get_today_date_PST())
+    currentdatedashes = dateToDashesString(currentdate)
+    print(nextdaygames)
     for game in nextdaygames:
         hometeam = db.GetTeamFromDatabase(game[airBallApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[airBallApi.AWAY])
         prediction = airBallApi.makePrediction(
             hometeam, awayteam, currentdate, MINGAMES)
-        
-        currentdatedashes = dateToDashesString(currentdate)
-        todaydatedashes = dateToDashesString(get_today_date_PST())
         hometeambettingline = 999
         if currentdatedashes == todaydatedashes:
             hometeambettingline = bettingline.get(hometeam.name)

@@ -222,3 +222,38 @@ class NbaSeasonStats:
         obj = cls(json_dict['name'], json_dict['year'])
         obj.__dict__.update(json_dict)
         return obj
+    
+    # ******* for reversal usage only ********
+    
+    def _reverseteamstats(self, stats: NbaGameStats, hometeam: bool):
+        if stats.winloss: self.wins -= 1
+        else: self.losses -= 1
+
+        # team cumulative stats
+        self._3pm -= stats.fg3m
+        self._3pa -= stats.fg3a
+        self._2pm -= stats.fgm - stats.fg3m
+        self._2pa -= stats.fga - stats.fg3a
+        self.pts -= stats.pts
+        self.to -= stats.tov
+        self.poss -= stats.fga - stats.oreb + stats.tov + stats.fta/2
+        self.orb -= stats.oreb
+        self.drb -= stats.dreb
+
+        self.gamedates.pop()
+        self.washometeam.pop()
+        self.waswinner.pop()
+
+    def _reverseopponentstats(self, stats: NbaGameStats, opp_rank: int):
+        self.opp_3pm -= stats.fg3m
+        self.opp_3pa -= stats.fg3a
+        self.opp_2pm -= stats.fgm - stats.fg3m
+        self.opp_2pa -= stats.fga - stats.fg3a
+        self.opp_pts -= stats.pts
+        self.opp_to -= stats.tov
+        self.opp_poss -= stats.fga - stats.oreb + stats.tov + stats.fta/2
+        self.opp_orb -= stats.oreb
+        self.opp_drb -= stats.dreb
+
+        self.opponent.pop()
+        self.sos.pop()

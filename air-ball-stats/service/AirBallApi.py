@@ -22,8 +22,7 @@ class AirBallApi:
         '''
         dayofgame = dateToDashesString(date)
         data = self.getGamesRequest(dayofgame) + \
-        self.getGamesRequest(dateToDashesString(date + timedelta(days=1)))
-        
+        self.getGamesRequest(dateToDashesString(date + timedelta(days=1)))    
         games = []
         for game in data:
             gameday = convertUTCtoPSTtoDashesString(game['date']['start'])
