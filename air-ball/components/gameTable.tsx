@@ -51,15 +51,15 @@ export function gameTable(games: nbaGame[]) {
           
 
           return ( 
-          <tr key={index} style={trStyle}>
-            <td className='td-img' >
-              <TeamDisplay imageUrl={game.hometeamimageurl} abbreviation={game.hometeam_abbr} />
+          <tr key={index} style={trStyle}>   
+            <td className='td-img'>
+              <TeamDisplay imageUrl={game.awayteamimageurl} abbreviation={game.awayteam_abbr} />
             </td>
             <td className='td-img'>
               {'@'}
             </td>
-            <td className='td-img'>
-              <TeamDisplay imageUrl={game.awayteamimageurl} abbreviation={game.awayteam_abbr} />
+            <td className='td-img' >
+              <TeamDisplay imageUrl={game.hometeamimageurl} abbreviation={game.hometeam_abbr} />
             </td>
             <td>{new Date(game.gametime).toLocaleTimeString()}</td>
             <td className='img-line-left'>
@@ -93,9 +93,9 @@ export function pastGameTable(games: nbaGame[]) {
         <th></th>
         <th></th>
         <th></th>
-        <th>DraftKings</th>
-        <th>Air-Ball</th>
-        <th>Result</th>
+        <th colSpan={2}>DraftKings</th>
+        <th colSpan={2}>Air-Ball</th>
+        <th colSpan={2}>Result</th>
       </tr>
     </thead>
     <tbody className="games-row">
@@ -112,15 +112,36 @@ export function pastGameTable(games: nbaGame[]) {
             <TeamDisplay imageUrl={getTeamImage(game.awayteam)} 
             abbreviation={getTeamAbbreviation(game.awayteam)} />
           </td>
-          <td>{lineToString(game.hometeamline, 
-            getTeamAbbreviation(game.hometeam), 
-            getTeamAbbreviation(game.awayteam))}</td>
-          <td>{lineToString(game.homeairballline, 
-          getTeamAbbreviation(game.hometeam), 
-            getTeamAbbreviation(game.awayteam))}</td>
-          <td>{lineToString(game.hometeamresult, 
-          getTeamAbbreviation(game.hometeam), 
-            getTeamAbbreviation(game.awayteam))}</td>
+          <td className='img-line-left'>
+              {lineToImg(game.hometeamline, 
+                getTeamImage(game.hometeam), 
+                getTeamImage(game.awayteam))}
+          </td>
+          <td className='img-line-right'>
+            {lineToString(game.hometeamline, 
+              getTeamAbbreviation(game.hometeam), 
+              getTeamAbbreviation(game.awayteam))}
+          </td>
+          <td className='img-line-left'>
+              {lineToImg(game.homeairballline, 
+                getTeamImage(game.hometeam), 
+                getTeamImage(game.awayteam))}
+          </td>
+          <td className='img-line-right'>
+            {lineToString(game.homeairballline, 
+              getTeamAbbreviation(game.hometeam), 
+              getTeamAbbreviation(game.awayteam))}
+          </td>
+          <td className='img-line-left'>
+              {lineToImg(game.hometeamresult, 
+                getTeamImage(game.hometeam), 
+                getTeamImage(game.awayteam))}
+          </td>
+          <td className='img-line-right'>
+            {lineToString(game.hometeamresult, 
+              getTeamAbbreviation(game.hometeam), 
+              getTeamAbbreviation(game.awayteam))}
+          </td>
       </tr>
       ))}
   </tbody>

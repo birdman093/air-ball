@@ -1,3 +1,4 @@
 .env.local
 __pycache__
 air-ball-stats/test.py
+.vercel

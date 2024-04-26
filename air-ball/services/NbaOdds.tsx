@@ -1,6 +1,7 @@
 import { nbaGame, createNbaGame } from "@/datatypes/apigame";
 import { isDateToday } from "@/util/date";
 import { create } from "domain";
+import { teamNameConversion } from "@/util/teamNameConversion";
 
 export const NbaOdds = async (gameDate: string) => {
     // Currently odds only work on current day
@@ -30,6 +31,10 @@ export const NbaOdds = async (gameDate: string) => {
 
 const ProcessNbaOdds = (result: any) => {
     let nbaGamesWithOdds: nbaGame[] = []
+    if (!Array.isArray(result)) {
+        console.error("ProcessNbaOdds expected 'result' to be an array, received:", result);
+        return nbaGamesWithOdds;
+    }
     result.forEach(function(game: any) {
         let homelineprice = -1; let awaylineprice = -1; let spread = -1; let favorite = "";
         try {
@@ -53,8 +58,8 @@ const ProcessNbaOdds = (result: any) => {
         }
 
         const newGame: nbaGame = createNbaGame({
-            hometeam: game.home_team,
-            awayteam: game.away_team,
+            hometeam: teamNameConversion(game.home_team),
+            awayteam: teamNameConversion(game.away_team),
             gametime: game.commence_time,
             hometeamline: spread,
             homelineprice: homelineprice, 

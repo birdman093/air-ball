@@ -10,6 +10,21 @@
 
 }
 
+.scrollableContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+}
+
+.yesterday-date {
+    text-align: center; /* Center the text inside the input */
+    margin: 10px auto; /* Vertical margin for spacing, centered horizontally */
+    padding: 5px;
+    font-family: 'Papyrus', cursive; /* Stylistic font choice */
+}
+
 .date {
     text-align: center;
     margin: 0px;

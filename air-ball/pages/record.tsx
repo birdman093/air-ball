@@ -10,7 +10,7 @@ import { NextPageWithLayout } from './_app';
 import { useRouter } from 'next/router';
 
 const MINDATE = "2024-04-02";
-const MAXDATE = "2024-04-14";
+const MAXDATE = "2024-06-15";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const pastDate = context.query.date as string || yesterdayDate(MAXDATE);
@@ -31,10 +31,10 @@ const PastPicks: NextPageWithLayout<GameProps> = ({ pastGames }) => {
   };
 
   return (
-    <div>
+    <div className='scrollableContainer'>
       <input
         type="date"
-        className="date"
+        className="yesterday-date"
         min={MINDATE}
         max={MAXDATE}
         value={date}

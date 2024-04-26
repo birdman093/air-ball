@@ -10,8 +10,8 @@ export const AirBall = async (gameDate : string) => {
         return createNbaGame({
             hometeam: json.hometeamname,
             awayteam: json.awayteamname,
-            hometeamresult: -1 & json.hometeamplusminusresult, // Converts to line
-            hometeamline: json.hometeamplusminusodds || 999,
+            hometeamresult: -1 * json.hometeamplusminusresult,
+            hometeamline: json.hometeamlineodds || 999,
             homeairballline: -1 * json.hometeamplusminusprediction //Converts to line
         });
     });
@@ -19,7 +19,12 @@ export const AirBall = async (gameDate : string) => {
 }
 
 const getPredictionData = async (gameDate: string) => {
-    AWS.config.update({ region: 'us-east-2' });
+    AWS.config.update({
+        accessKeyId: process.env.AWS_IAM_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_IAM_SECRET_ACCESS_KEY,
+        region: process.env.AWS_REGION
+    });
+
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
     const params = {

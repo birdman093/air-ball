@@ -9,11 +9,12 @@ import '../styles/today.css'
 import { NbaGamesByDate } from '@/services/NbaGamesByDate'
 import { gameTable } from '@/components/gameTable'
 
-const MAXDATE = "2024-04-14"
+const MAXDATE = "2024-06-15"
 
 export const getStaticProps = (async (context) => {
   const today = todayDate(MAXDATE)
   const todaygames: nbaGame[] = await NbaGamesByDate(today);
+  console.log(todaygames)
   return { props: { todaygames } }
 }) satisfies GetStaticProps<{
   todaygames: nbaGame[]
