@@ -1,16 +1,39 @@
-# air-ball
-NBA game line predictions using air-ball ML API
+<div align="center">
+<img height='200px' src='air-ball/public/air-ball.png'>
+</div>
+
+# Project Air Ball
+Project Air Ball is a machine learning model, seasonal data aggregation, and 
+frontend built using data from the NBA API
+
+<img height='400px' src='air-ball/public/dailypicks.png'>
 
 ## Website
-TBD
+https://air-ball.vercel.app
 
-## Technologies Used
-frontend - Next.js, React.js, TypeScript
-backend - Next.js, TypeScript, AWS
-APIs - NBA API, air-ball ML API
+## Technology, Deployment, and Architecture
+```
+Frontend/Backend (air-ball) - Next.js w/ TypeScript
+Data aggregation and Prediction (air-ball-stats) - Python w/ Type Hints
+Season and Prediction Database - DynamoDB on AWS
+APIs - NBA API, Live Sports Odds, API-NBA, Air Ball API
+```
+```
+Python Data aggregation and Prediction - AWS EventBridge
+Database - DynamoDB on AWS
+Next.Js Static Content - Vercel
+```
+<img height='200px' src='air-ball/public/architecture.png'>
 
-## Deployment
-TBD
+## Project Air Ball ML Model
+https://github.com/ryan-t-mitchell/nba_predictions
 
-## Architecture
-TBD
+## Screenshots
+### Full Website
+<img height='200px' src='air-ball/public/fullsite.png'>
+
+### Daily Picks
+<img height='200px' src='air-ball/public/dailypicks2.png'>
+
+### Record Picks
+<img height='200px' src='air-ball/public/recordpicks.png'>
