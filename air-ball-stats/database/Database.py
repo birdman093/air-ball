@@ -15,6 +15,7 @@ class Database:
 
     def getdailyscriptparameters(self) -> None:
         data = self.db.getTableConfig()
+        print(data)
 
         try:
             parameters = DailyScriptParameters.from_json(data)

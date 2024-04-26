@@ -7,7 +7,7 @@ class NbaGameStats:
     def __init__(self, df: pd.DataFrame):
         self.team_id = df['TEAM_ID']
         self.team_abbreviation = df['TEAM_ABBREVIATION']
-        self.team_name = df['TEAM_NAME']
+        self.team_name: str = str(df['TEAM_NAME'])
         self.game_id = df['GAME_ID']
         self.game_date = df['GAME_DATE'] # YEAR-MO-DA e.g.2018-11-24
         self.matchup = df['MATCHUP']

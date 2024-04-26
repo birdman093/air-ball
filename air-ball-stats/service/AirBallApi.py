@@ -11,7 +11,7 @@ class AirBallApi:
         self.HOME = 'home'
         self.AWAY = 'away'
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        env_path = os.path.join(script_dir, 'credentials', '.env.local')
+        env_path = os.path.join(script_dir, '../credentials', '.env.local')
         load_dotenv(env_path)
 
     def getUnPlayedGamesOnDate(self, date: date) -> list[dict[str, str]]:

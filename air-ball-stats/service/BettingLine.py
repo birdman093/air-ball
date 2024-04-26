@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 class NbaBettingLine:
     def __init__(self):
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        env_path = os.path.join(script_dir, 'credentials', '.env.local')
+        env_path = os.path.join(script_dir, '../credentials', '.env.local')
         load_dotenv(env_path)
 
     def get_game_lines(self) -> dict[str, float]:

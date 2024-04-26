@@ -14,13 +14,13 @@ from scripts.logos import *
 
 MINGAMES = 10
 
-def MakePredictionsForDay(airBallApi : AirBallApi, 
+def make_predictions_day(airBallApi : AirBallApi, 
                           nbaBettingLine: NbaBettingLine, 
                           db: Database, 
                           currentdate: date):
     print('*** Making Predictions ***')
     nextdaygames: list[dict[str,str]] = airBallApi.getUnPlayedGamesOnDate(currentdate)
-    bettingline: dict = nbaBettingLine.get_game_lines()
+    bettingline: dict[str, float] = nbaBettingLine.get_game_lines()
     predictions: list[Prediction] = []
     todaydatedashes = dateToDashesString(get_today_date_PST())
     currentdatedashes = dateToDashesString(currentdate)
@@ -33,8 +33,9 @@ def MakePredictionsForDay(airBallApi : AirBallApi,
         hometeambettingline = 999
         if currentdatedashes == todaydatedashes:
             hometeambettingline = bettingline.get(hometeam.name)
+            if not hometeambettingline: hometeambettingline = 999
             print(f'Added Betting Line for {awayteam.name} @ {hometeam.name} {hometeambettingline}')
-
+            
         predictions.append(Prediction(
             hometeam.name, hometeam.gamesplayed(), 
             awayteam.name, awayteam.gamesplayed(),

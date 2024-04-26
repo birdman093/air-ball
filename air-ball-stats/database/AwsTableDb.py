@@ -1,18 +1,23 @@
-import boto3
-import json
+import boto3, json, os
+from dotenv import load_dotenv
 from botocore.config import Config
 
 class AwsTableDb:
     def __init__(self):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        env_path = os.path.join(script_dir, '../credentials', '.env.local')
+        load_dotenv(env_path)
         self.my_config = Config(
-            region_name = 'us-east-2',
             retries = {
                 'max_attempts': 10,
                 'mode': 'standard'
             }
         )
-        
-        self.dynamodb = boto3.client('dynamodb', config=self.my_config)
+        self.dynamodb = boto3.client('dynamodb', 
+            aws_access_key_id=os.getenv('AWS_IAM_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_IAM_SECRET_ACCESS_KEY'),
+            region_name=os.getenv('AWS_REGION'),
+            config=self.my_config)
 
         # team data
         self.teamtable = 'airBallDb'
@@ -74,7 +79,7 @@ class AwsTableDb:
         if response and 'data' in response and 'S' in response['data']:
             return json.loads(response['data']['S'])
         else:
-            return None
+            return ""
     
     def getAllFromDbExceptConfig(self) -> list[str]:
         # Scan operation with a filter expression to exclude the config item
@@ -97,7 +102,11 @@ class AwsTableDb:
                 self.partitionkey: {'S': self.configpartitionvalue}
             }
         )
-        return response.get('Item', None)
+        response = response.get('Item', None)
+        if response and 'data' in response and 'S' in response['data']:
+            return json.loads(response['data']['S'])
+        else:
+            return {}
     
     def setTableConfig(self, serializeddata: str):
         self.dynamodb.put_item(
@@ -129,6 +138,6 @@ class AwsTableDb:
         if response and 'data' in response and 'L' in response['data']:
             return [ result['S'] for result in response['data']['L']]
         else:
-            return None
+            return []
 
     
