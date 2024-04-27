@@ -1,6 +1,10 @@
 FROM python:3.11
 WORKDIR /usr/src/app
 COPY requirements.txt ./
+RUN pip install awslambdaric
 RUN pip install -r requirements.txt
 COPY . .
-CMD [ "python", "./main.py" ]
+# CMD [ "python", "./main.py" ] Non-AWS Lambda container
+# AWS Lambda Container
+ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
+CMD [ "lambda_function.handler" ]
