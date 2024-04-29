@@ -64,7 +64,7 @@ class AwsTableDb:
             unprocessed_items = response.get('UnprocessedItems', {})
             if unprocessed_items:
                 # Handle unprocessed items (e.g., by retrying)
-                raise Exception(f"Warning: Some items were not processed: {unprocessed_items}")
+                raise Exception(f"ERROR: Following items were not batch added: {unprocessed_items}")
 
 
 

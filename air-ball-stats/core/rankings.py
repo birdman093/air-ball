@@ -1,4 +1,5 @@
 #python
+import logging
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 # internal 
@@ -12,9 +13,13 @@ from service.BettingLine import NbaBettingLine
 from utility.dates import *
 from scripts.logos import *
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 WINPCTTOLERANCE = .001
 
 def update_season_rankings(db: Database) -> None:
+    logger.info('*** Start Update Season Rankings ***')
     team: NbaSeasonStats
     allteams: list[NbaSeasonStats] = db.GetAllTeamsFromDatabase()    
     allteams.sort(key=lambda team: team._winpct(), reverse=True) # sort highest
@@ -26,3 +31,4 @@ def update_season_rankings(db: Database) -> None:
             rank = idx + 1
         team.setrank(rank)
     db.EditAllTeamsInDatabase(allteams)
+    logger.info('*** End Update Season Rankings ***')

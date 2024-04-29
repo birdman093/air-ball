@@ -1,10 +1,12 @@
-import requests
-import os
+import requests, os, logging
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
 from model.NbaSeasonStats import NbaSeasonStats
 from utility.dates import dateToDashesString, convertUTCtoPSTtoDashesString
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 class AirBallApi:
     def __init__(self):
@@ -29,12 +31,12 @@ class AirBallApi:
             if gameday == dayofgame:
                 hometeam = game['teams']['home']['name']
                 awayteam = game['teams']['visitors']['name']
-                print(f'{awayteam} @ {hometeam}')
+                logger.info(f'Added Unplayed Game: {awayteam} @ {hometeam}')
                 games.append({self.HOME : hometeam,
                             self.AWAY : awayteam})
                             # f'{self.HOME}_url' : game['teams']['home']['logo'],
                             # f'{self.AWAY}_url' : game['teams']['visitors']['logo']})
-        print(f'{len(data)} API-NBA-V1 Games loaded for {date}')
+        logger.info(f'{len(data)} API-NBA-V1 Games loaded for {date}')
         return games
     
     def getGamesRequest(self, date):
@@ -47,8 +49,8 @@ class AirBallApi:
         try: 
             response = requests.get(url, headers=headers)
             data = response.json()['response']
-        except: 
-            raise Exception(f'Failed to retrieve API-NBA-V1 Games on {date}')
+        except Exception as e: 
+            raise Exception(f'Failed to retrieve API-NBA-V1 Games on {date}') from e
         return data
     
     def makePrediction(self, home: NbaSeasonStats, away: NbaSeasonStats,
@@ -58,18 +60,18 @@ class AirBallApi:
         {"home_team_plus_minus_predictions":
         [{"home_team_plus_minus":1.6254919885342773}]}
         '''
-        url = os.getenv('AIR_BALL_PREDICTION_URL')
+        url = os.getenv('AIR_BALL_PREDICTION_URL') or ""
         payload = {"games" : [home.airballformat(True, date, mingames) 
                               | away.airballformat(False, date, mingames)]}
         
         try:
             response = requests.post(url, json=payload).json()
             prediction = response["home_team_plus_minus_predictions"][0]
-            print(f'Prediction made {away.name} @ {home.name}: {prediction}')
-        except:
+            logger.info(f'Air-Ball Prediction: {away.name} @ {home.name}: {prediction}')
+        except Exception as e:
             raise Exception(f'Failed to make prediction\n' +
                             f'url: {url}\n' +
-                            f'payload: {payload}\n') 
+                            f'payload: {payload}\n') from e
 
 
         return prediction

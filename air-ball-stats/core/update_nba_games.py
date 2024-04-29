@@ -1,9 +1,7 @@
-'''Deployed to AWS Lambda'''
 #python
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
-import time
-import logging
+import time, logging
 # internal 
 from model.NbaGameStats import NbaGameStats
 from model.NbaSeasonStats import NbaSeasonStats
@@ -19,7 +17,8 @@ from core.rankings import update_season_rankings
 
 MINGAMES = 10
 SLEEPMODE = True
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def update_nba_games():
     ''' AWS Lambda Server Function - Runs Daily at 3am ET\n
@@ -27,7 +26,8 @@ def update_nba_games():
     ** makes predictions for todays games\n
     ** updates configurations
     '''
-    ######  #######
+    logging.info("** Update NBA Games Started **")
+
     db: Database = Database()
     nbaApi: NbaApi = NbaApi(db.year) 
     airBallApi: AirBallApi = AirBallApi()
@@ -72,15 +72,9 @@ def update_nba_games():
         make_predictions_day(airBallApi, nbaBettingLine, db, currentdate)
         
     db.setdailyscriptparameters()
-    print("** Completed **")
+    logging.info("** Update NBA Games Completed **")
 
 def test_working():
-    logging.info('Function started')
     db = Database()
     knicks = db.GetTeamFromDatabase("New York Knicks")
     logging.info(f"Retrieved data: {knicks}")
-
-if __name__ == "__main__":
-    update_nba_games()
-    #test_working()
-    logging.info('Function completed successfully')

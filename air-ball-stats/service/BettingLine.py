@@ -1,5 +1,8 @@
-import os, requests
+import os, requests, logging
 from dotenv import load_dotenv
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 class NbaBettingLine:
     def __init__(self):
@@ -19,8 +22,9 @@ class NbaBettingLine:
         try:
             response = requests.get(url, headers=headers)
             result = response.json()
-        except Exception as error:
-            print(error)
+        except Exception as e:
+            logger.error(f'Script Continued: Odds Failed to load: {e}')
+            result = []
 
         points = {}
         for game in result:
