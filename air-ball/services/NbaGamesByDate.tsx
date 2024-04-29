@@ -7,15 +7,14 @@ import { NbaGames } from "./NbaGames";
 
 
 export const NbaGamesByDate = async (gameDate: string) => {
-    const nbaGamesWithOdds  = await NbaOdds(gameDate);
+    //const nbaGamesWithOdds  = await NbaOdds(gameDate);
     const nbaGamesWithAirBall = await AirBall(gameDate);
     const nbaGames = await NbaGames(gameDate);
-    return mergeNbaApis(nbaGames, nbaGamesWithOdds, nbaGamesWithAirBall)
+    return mergeNbaApis(nbaGames, [], nbaGamesWithAirBall)
 }
 
 export const PastNbaGamesByDate = async (gameDate: string) => {
     const nbaGamesWithAirBall = await AirBall(gameDate);
-    console.log(nbaGamesWithAirBall)
     return nbaGamesWithAirBall;
 }
 

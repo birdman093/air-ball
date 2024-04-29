@@ -7,6 +7,7 @@ export const AirBall = async (gameDate : string) => {
     if (predictions?.length === 0 || !predictions) {return [];}
     let games: nbaGame[] = (predictions[0].data).map((prediction: any) => {
         const json = JSON.parse(prediction);
+        console.log(json)
         return createNbaGame({
             hometeam: json.hometeamname,
             awayteam: json.awayteamname,

@@ -12,11 +12,12 @@ export const mergeNbaApis = (games: nbaGame[],
             if (oddsMatch) {
                 game.homelineprice = oddsMatch.homelineprice;
                 game.awaylineprice = oddsMatch.awaylineprice;
-                game.hometeamline = oddsMatch.hometeamline;
+                game.livehometeamline = oddsMatch.hometeamline;
             }
 
             if (airBallMatch) {
                 game.homeairballline = airBallMatch.homeairballline;
+                game.hometeamline = airBallMatch.hometeamline;
             }
         }
         return games

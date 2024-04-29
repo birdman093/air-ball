@@ -10,7 +10,8 @@ export type nbaGame = {
     hometeamresult: number,
     homelineprice: number,
     awaylineprice: number,
-    homeairballline: number
+    homeairballline: number,
+    livehometeamline: number
 }
 
 export function createNbaGame(gameData: Partial<nbaGame>): nbaGame {
@@ -27,7 +28,8 @@ export function createNbaGame(gameData: Partial<nbaGame>): nbaGame {
       hometeamresult: 9999,
       homelineprice: 0,
       awaylineprice: 0,
-      homeairballline: 9999
+      homeairballline: 9999,
+      livehometeamline: 9999
     };
   
     return { ...defaultValues, ...gameData } as nbaGame;
