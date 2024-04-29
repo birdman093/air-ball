@@ -1,12 +1,12 @@
 <div align="center">
-<img height='200px' src='air-ball/public/air-ball.png'>
+<img max-height='200px' src='air-ball/public/air-ball.png'>
 </div>
 
 # Project Air Ball
 Project Air Ball is a machine learning model, seasonal data aggregation, and 
 frontend built using data from the NBA API
 
-<img height='400px' src='air-ball/public/dailypicks.png'>
+<img max-height='400px' src='air-ball/public/dailypicks.png'>
 
 ## Website
 https://air-ball.vercel.app
@@ -23,17 +23,17 @@ Python Data aggregation and Prediction - AWS EventBridge
 Database - DynamoDB on AWS
 Next.Js Static Content - Vercel
 ```
-<img height='200px' src='air-ball/public/architecture.png'>
+<img max-height='200px' src='air-ball/public/architecture.png'>
 
 ## Project Air Ball ML Model
 https://github.com/ryan-t-mitchell/nba_predictions
 
 ## Screenshots
 ### Full Website
-<img height='200px' src='air-ball/public/fullsite.png'>
+<img max-height='200px' src='air-ball/public/fullsite.png'>
 
 ### Daily Picks
-<img height='200px' src='air-ball/public/dailypicks2.png'>
+<img max-height='200px' src='air-ball/public/dailypicks2.png'>
 
 ### Record Picks
-<img height='200px' src='air-ball/public/recordpicks.png'>
+<img max-height='200px' src='air-ball/public/recordpicks.png'>
