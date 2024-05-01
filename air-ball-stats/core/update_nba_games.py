@@ -37,7 +37,7 @@ def update_nba_games():
     if SLEEPMODE: time.sleep(1)
 
     while currentdate <= enddate:
-        currentdategames = nbaApi.getPlayedGamesOnDate(dateToSlashesString(currentdate))
+        currentdategames = nbaApi.get_played_games_on_date(dateToSlashesString(currentdate))
 
         yesterday_predictions: list[Prediction] = db.GetPredictionByDate(currentdate)
         for game in currentdategames.values():
@@ -75,6 +75,11 @@ def update_nba_games():
     logging.info("** Update NBA Games Completed **")
 
 def test_working():
+    # NBA API test
+    nbaApi = NbaApi("2023-24")
+    logging.info(nbaApi.get_played_games_on_date("04/28/2024"))
+
+    # DB test
     db = Database()
     knicks = db.GetTeamFromDatabase("New York Knicks")
     logging.info(f"Retrieved data: {knicks}")

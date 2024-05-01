@@ -14,14 +14,17 @@ https://air-ball.vercel.app
 ## Technology, Deployment, and Architecture
 ```
 Frontend/Backend (air-ball) - Next.js w/ TypeScript
-Data aggregation and Prediction (air-ball-stats) - Python w/ Type Hints
-Season and Prediction Database - DynamoDB on AWS
-APIs - NBA API, Live Sports Odds, API-NBA, Air Ball API
+Data and Prediction (air-ball-stats) - Docker Container - Python w/ Type Hints
+Database - DynamoDB
+APIs - NBA API, Live Sports Odds, API-NBA, Air-Ball API
 ```
 ```
-Python Data aggregation and Prediction - AWS EventBridge
-Database - DynamoDB on AWS
-Next.Js Static Content - Vercel
+Next.js Static Content - Vercel
+Data and Prediction - AWS Lambda, ECR, EventBridge, CloudWatch, SMS
+Database - AWS DynamoDB
+```
+```
+NOTE: Lambda/EventBridge tested but not fully set up due to nba api blocking AWS requests
 ```
 <img max-height='200px' src='air-ball/public/architecture.png'>
 

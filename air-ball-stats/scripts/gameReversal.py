@@ -10,7 +10,7 @@ def reversal(teams: list[str], game_date: date):
     print(f'Starting Reversal for ({len(teams)}) {teams} for {game_date}')
     db: Database = Database()
     nbaApi: NbaApi = NbaApi(db.year) 
-    games = nbaApi.getPlayedGamesOnDate(dateToSlashesString(game_date))
+    games = nbaApi.get_played_games_on_date(dateToSlashesString(game_date))
     reversed = 0
     for game in games.values():
         home_game: NbaGameStats = game[nbaApi.HOME]

@@ -35,8 +35,7 @@ def make_predictions_day(airBallApi : AirBallApi,
             hometeam, awayteam, currentdate, MINGAMES)
         hometeambettingline = 999
         if currentdatedashes == todaydatedashes:
-            hometeambettingline = bettingline.get(hometeam.name)
-            if not hometeambettingline: hometeambettingline = 999
+            hometeambettingline = get_betting_line(bettingline, hometeam.name)
             logger.info(f'Prediction Created: {awayteam.name} @ {hometeam.name} {hometeambettingline}')
             
         predictions.append(Prediction(
@@ -49,3 +48,15 @@ def make_predictions_day(airBallApi : AirBallApi,
     db.AddPredictions(
             currentdate, predictions)
     logger.info('*** End Make Predictions Day ***')
+
+def get_betting_line(bettingline: dict[str,float], teamname) -> float:
+    line: float | None = bettingline.get(teamname)
+    if not line and teamname in teamNameConversion:
+        line = bettingline.get(teamNameConversion[teamname])
+    if not line: return 999
+    return line
+
+
+teamNameConversion = {
+    "LA Clippers" : "Los Angeles Clippers"
+}

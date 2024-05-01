@@ -15,7 +15,7 @@ class NbaApi:
         self.AWAY = 'away'
         self.HOME = 'home'
 
-    def getPlayedGamesOnDate(self, slashesDate: str) -> dict[str, dict[str, NbaGameStats]]:
+    def get_played_games_on_date(self, slashesDate: str) -> dict[str, dict[str, NbaGameStats]]:
         '''
         Get nba games by date formatted #MO/DAY/YEAR\n  
         Return: gameid : {home : {stats}, away: {stats}}\n
