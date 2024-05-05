@@ -12,20 +12,40 @@ frontend built using data from the NBA API
 https://air-ball.vercel.app
 
 ## Technology, Deployment, and Architecture
+
+### Frontend (air-ball)
 ```
-Frontend/Backend (air-ball) - Next.js w/ TypeScript
-Data and Prediction (air-ball-stats) - Docker Container - Python w/ Type Hints
-Database - DynamoDB
-APIs - NBA API, Live Sports Odds, API-NBA, Air-Ball API
+Next.js with TypeScript
+Hosted: Vercel
 ```
+
+### Data and Prediction Backend (air-ball-stats)
 ```
-Next.js Static Content - Vercel
-Data and Prediction - AWS Lambda, ECR, EventBridge, CloudWatch, SMS
-Database - AWS DynamoDB
+Python with Type Hints
+Hosted: Docker Container on AWS Lambda
+Logging: EventBridge, CloudWatch, SMS
 ```
+
+### Season Data and Air-Ball Predictions Database
 ```
-NOTE: Lambda/EventBridge tested but not fully set up due to nba api blocking AWS requests
+DynamoDB on AWS
+``````
+
+### APIs
 ```
+NBA API Python Module
+Live Sports Odds on RapidAPI 
+API-NBA on RapidAPI
+Air-Ball API hosted on EC2 
+```
+
+### Deployment Note:
+
+ AWS Lambda/EventBridge in testing but not set up due to blocked api requests
+https://github.com/swar/nba_api/issues/176
+
+### Architecture:
+
 <img max-height='200px' src='air-ball/public/architecture.png'>
 
 ## Project Air Ball ML Model

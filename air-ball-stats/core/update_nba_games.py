@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 import time, logging
+import requests
 # internal 
 from model.NbaGameStats import NbaGameStats
 from model.NbaSeasonStats import NbaSeasonStats

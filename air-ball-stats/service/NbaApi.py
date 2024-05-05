@@ -1,8 +1,11 @@
-import logging
-from nba_api.stats.endpoints import leaguegamefinder
-from nba_api.stats.static import teams
+import logging, os
+from dotenv import load_dotenv
 import pandas as pd
 from datetime import date
+
+from nba_api.stats.endpoints import leaguegamefinder
+from nba_api.stats.static import teams
+
 from model.NbaGameStats import NbaGameStats
 
 logger = logging.getLogger()
@@ -14,6 +17,13 @@ class NbaApi:
         self.LEAGUE = '00'  #NBA
         self.AWAY = 'away'
         self.HOME = 'home'
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        env_path = os.path.join(script_dir, '../credentials', '.env.local')
+        load_dotenv(env_path)
+        username = os.getenv('PROXY_USERNAME') or ""
+        password = os.getenv('PROXY_PASSWORD') or ""
+        port = os.getenv('PROXY_PORT') or ""
+        self.proxy = f"http://{username}:{password}@gate.smartproxy.com:{port}"
 
     def get_played_games_on_date(self, slashesDate: str) -> dict[str, dict[str, NbaGameStats]]:
         '''
@@ -26,7 +36,8 @@ class NbaApi:
                 league_id_nullable = self.LEAGUE,            
                 season_nullable = self.year,        
                 date_from_nullable = slashesDate,                                                 
-                date_to_nullable = slashesDate).get_data_frames()[0]
+                date_to_nullable = slashesDate,
+                proxy = self.proxy).get_data_frames()[0]
             logger.info(f'{len(currentdategames)} teams loaded ' +
                   f'from LeagueGameFinder on {slashesDate}')
         except Exception as e:

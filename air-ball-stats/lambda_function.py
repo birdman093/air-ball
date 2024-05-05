@@ -14,12 +14,12 @@ def handler(event, context):
     current_time = datetime.datetime.now(pytz.timezone(
         'America/Los_Angeles')).strftime('%m-%d-%Y')
     logging.info(f"Started update_nba_games at {current_time}")
-    #test_working()
+    # test_working()
     update_nba_games()
     end_time = time.time()
     logging.info(f'Finished update_nba_games inz {end_time - start_time} seconds')
 
-    # *** DO NOT MODIFY *** AWS ALARM LOG ***
+    # *** DO NOT MODIFY *** AWS ALARM TAG ***
     logging.info('AIR-BALL UPDATE COMPLETED SUCCESSFULLY')
 
 if __name__ == "__main__":
