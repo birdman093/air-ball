@@ -39,11 +39,6 @@ API-NBA on RapidAPI
 Air-Ball API hosted on EC2 
 ```
 
-### Deployment Note:
-
- AWS Lambda/EventBridge in testing but not set up due to blocked api requests
-https://github.com/swar/nba_api/issues/176
-
 ### Architecture:
 
 <img max-height='200px' src='air-ball/public/architecture.png'>
