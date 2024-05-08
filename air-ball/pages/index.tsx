@@ -17,8 +17,6 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async (context) => {
   const today = todayDate(MAXDATE);
   const todaygames: nbaGame[] = await NbaGamesByDate(today);
-  console.log(todaygames);
-  
   return { props: { todaygames } };
 };
 

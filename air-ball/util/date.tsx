@@ -1,27 +1,43 @@
 export const todayDate = (maxDateString: string) => {
-    const today = new Date();
+    // Check based on PST time for now
+
+    // Create a new Date object for the current time in Pacific Time
+    const todayUTC = new Date();
+    const offset = todayUTC.getTimezoneOffset() * 60000; // Convert offset to milliseconds
+    const pacificTime = new Date(todayUTC.getTime() - offset - (7 * 3600 * 1000)); // Adjust for Pacific Time (-7 hours)
+
     const maxDate = new Date(maxDateString);
-    
-    // If today is greater than maxDate, use maxDate instead
-    const effectiveDate = today > maxDate ? maxDate : today;
+    maxDate.setHours(0, 0, 0, 0); // Normalize maxDate to start of the day
+
+    // If today in Pacific Time is greater than maxDate, use maxDate instead
+    const effectiveDate = pacificTime > maxDate ? maxDate : pacificTime;
 
     return effectiveDate.getFullYear() + '-' + 
     String(effectiveDate.getMonth() + 1).padStart(2, '0') + 
     '-' + String(effectiveDate.getDate()).padStart(2, '0');
 };
+
 
 export const yesterdayDate = (maxDateString: string) => {
-    const today = new Date();
-    today.setDate(today.getDate() - 1);
+    const utcDate = new Date();
+    const offset = utcDate.getTimezoneOffset() * 60000; // Convert offset to milliseconds
+    // Create a Date object for Pacific Standard Time (UTC-8)
+    const pstDate = new Date(utcDate.getTime() - offset - (8 * 3600 * 1000));
+
+    // Subtract one day to get 'yesterday' based on Pacific Standard Time
+    pstDate.setDate(pstDate.getDate() - 1);
+
     const maxDate = new Date(maxDateString);
-    
-    // If today is greater than maxDate, use maxDate instead
-    const effectiveDate = today > maxDate ? maxDate : today;
+    maxDate.setHours(0, 0, 0, 0); // Normalize maxDate to start of the day
+
+    // If 'yesterday' in PST is greater than maxDate, use maxDate instead
+    const effectiveDate = pstDate > maxDate ? maxDate : pstDate;
 
     return effectiveDate.getFullYear() + '-' + 
-    String(effectiveDate.getMonth() + 1).padStart(2, '0') + 
-    '-' + String(effectiveDate.getDate()).padStart(2, '0');
+           String(effectiveDate.getMonth() + 1).padStart(2, '0') + 
+           '-' + String(effectiveDate.getDate()).padStart(2, '0');
 };
+
 
 
 export const nbaGamesNextDayDate = (today: string) => {
