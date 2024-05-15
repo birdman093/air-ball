@@ -2,40 +2,38 @@ export const todayDate = (maxDateString: string) => {
     // Check based on PST time for now
 
     // Create a new Date object for the current time in Pacific Time
-    const todayUTC = new Date();
-    const offset = todayUTC.getTimezoneOffset() * 60000; // Convert offset to milliseconds
-    const pacificTime = new Date(todayUTC.getTime() - offset - (7 * 3600 * 1000)); // Adjust for Pacific Time (-7 hours)
+    const todayPST = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+    const todayDate = new Date(todayPST);
+
+    // Normalize todayDate to start of the day in PST
+    todayDate.setHours(0, 0, 0, 0);
 
     const maxDate = new Date(maxDateString);
     maxDate.setHours(0, 0, 0, 0); // Normalize maxDate to start of the day
 
     // If today in Pacific Time is greater than maxDate, use maxDate instead
-    const effectiveDate = pacificTime > maxDate ? maxDate : pacificTime;
+    const effectiveDate = todayDate > maxDate ? maxDate : todayDate;
 
-    return effectiveDate.getFullYear() + '-' + 
-    String(effectiveDate.getMonth() + 1).padStart(2, '0') + 
-    '-' + String(effectiveDate.getDate()).padStart(2, '0');
+    return effectiveDate.toISOString().split('T')[0]; // Returns date in YYYY-MM-DD format
 };
 
 
 export const yesterdayDate = (maxDateString: string) => {
-    const utcDate = new Date();
-    const offset = utcDate.getTimezoneOffset() * 60000; // Convert offset to milliseconds
-    // Create a Date object for Pacific Standard Time (UTC-8)
-    const pstDate = new Date(utcDate.getTime() - offset - (8 * 3600 * 1000));
+    // Create a new Date object for 'yesterday' in Pacific Time
+    const todayPST = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+    const todayDate = new Date(todayPST);
 
-    // Subtract one day to get 'yesterday' based on Pacific Standard Time
-    pstDate.setDate(pstDate.getDate() - 1);
+    // Subtract one day to get 'yesterday'
+    todayDate.setDate(todayDate.getDate() - 1);
+    todayDate.setHours(0, 0, 0, 0); // Normalize 'yesterday' to start of the day in PST
 
     const maxDate = new Date(maxDateString);
     maxDate.setHours(0, 0, 0, 0); // Normalize maxDate to start of the day
 
-    // If 'yesterday' in PST is greater than maxDate, use maxDate instead
-    const effectiveDate = pstDate > maxDate ? maxDate : pstDate;
+    // If 'yesterday' in Pacific Time is greater than maxDate, use maxDate instead
+    const effectiveDate = todayDate > maxDate ? maxDate : todayDate;
 
-    return effectiveDate.getFullYear() + '-' + 
-           String(effectiveDate.getMonth() + 1).padStart(2, '0') + 
-           '-' + String(effectiveDate.getDate()).padStart(2, '0');
+    return effectiveDate.toISOString().split('T')[0];
 };
 
 
