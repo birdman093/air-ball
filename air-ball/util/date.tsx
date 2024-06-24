@@ -1,18 +1,40 @@
-export const todayDate = (maxDateString: string) => {
-    // Check based on PST time for now
+import { endAirBall } from "./dateRanges";
 
-    // Create a new Date object for the current time in Pacific Time
-    const todayPST = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
-    const todayDate = new Date(todayPST);
+const SERVER_RUN_TIME = -10; // UTC+0 10am || UTC-10
 
-    // Normalize todayDate to start of the day in PST
+const createCurrentDateUTCPlus10 = () => {
+    const epochTime = Math.floor(new Date().getTime()/1000.0)
+    const date = new Date(epochTime * 1000);
+    const utcPlus10Offset = SERVER_RUN_TIME * 60;
+    const currentOffset = date.getTimezoneOffset();
+    const totalOffset = utcPlus10Offset - currentOffset;
+    const offsetInMilliseconds = totalOffset * 60 * 1000;
+    const utcPlus10Date = new Date(date.getTime() + offsetInMilliseconds);
+    return utcPlus10Date;
+}
+
+const getDateInUTCPlus10 = (year: number, month: number, day: number) => {
+    const date = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
+
+    // Get the UTC+10 offset in milliseconds (10 hours * 60 minutes/hour 
+    // * 60 seconds/minute * 1000 milliseconds/second)
+    const utcPlus10Offset = SERVER_RUN_TIME * 60 * 60 * 1000;
+    const utcDate = new Date(date.getTime() - utcPlus10Offset);
+    return utcDate;
+}
+
+
+export const todayDate = () => {
+    const todayDate = createCurrentDateUTCPlus10();
     todayDate.setHours(0, 0, 0, 0);
 
-    const maxDate = new Date(maxDateString);
-    maxDate.setHours(0, 0, 0, 0); // Normalize maxDate to start of the day
+    const [year, month, day] = endAirBall.split("-")
+    const maxDate = getDateInUTCPlus10(Number(year), Number(month), Number(day));
+    maxDate.setHours(0, 0, 0, 0);
 
-    // If today in Pacific Time is greater than maxDate, use maxDate instead
     const effectiveDate = todayDate > maxDate ? maxDate : todayDate;
+
+    console.log(effectiveDate);
 
     return effectiveDate.toISOString().split('T')[0]; // Returns date in YYYY-MM-DD format
 };
@@ -29,6 +51,7 @@ export const yesterdayDate = (maxDateString: string) => {
 
     const maxDate = new Date(maxDateString);
     maxDate.setHours(0, 0, 0, 0); // Normalize maxDate to start of the day
+    maxDate.setDate(maxDate.getDate() - 1);
 
     // If 'yesterday' in Pacific Time is greater than maxDate, use maxDate instead
     const effectiveDate = todayDate > maxDate ? maxDate : todayDate;

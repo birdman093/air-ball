@@ -39,7 +39,7 @@ const NbaGamesRequest = async (gameDate: string) => {
     try {
         const response = await fetch(url, options)
         const nbagamesresults = await response.json();
-        return nbagamesresults.response
+        return nbagamesresults.response ?? [];
     } catch (error) {
         console.error(error);
         return []
