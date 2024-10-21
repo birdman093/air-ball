@@ -7,10 +7,10 @@ class DailyScriptParameters:
         startdate to endate (inclusive) -- games must be completed for\n
         aggregation to occur correctly.
         '''
-        self.seasonyear = '2023-24'
+        self.seasonyear = '2024-25'
         self.firstdayofseason = True 
-        self.startdate = 'NOT-SET'  # set to day before 'today'
-        self.enddate = 'NOT-SET'
+        self.startdate = '10/21/2024'  # set to day before 'today'
+        self.enddate = '10/22/2024'
 
     def to_json(self):
         return json.dumps(self.__dict__)

@@ -10,12 +10,19 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 class Database:
-    def __init__(self):
+    def __init__(self, reset_parameters = False):
         self.initializeconnection()
-        self.getdailyscriptparameters()
+        if reset_parameters:
+            self.reset_parameters()
+        else:
+            self.getdailyscriptparameters()
 
     def initializeconnection(self) -> None:
         self.db: AwsTableDb = AwsTableDb()
+
+    def reset_parameters(self):
+        self.parameters = DailyScriptParameters()
+        self.setdailyscriptparameters()
 
     def getdailyscriptparameters(self) -> None:
         data = self.db.getTableConfig()

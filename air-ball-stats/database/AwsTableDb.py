@@ -20,7 +20,7 @@ class AwsTableDb:
             config=self.my_config)
 
         # team data
-        self.teamtable = 'airBallDb'
+        self.teamtable = 'airBallDb_24_25' #Yearly Table
         self.partitionkey = 'teamName'
         self.configpartitionvalue = 'Configuration'
 

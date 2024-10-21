@@ -30,7 +30,7 @@ def reversal(teams: list[str], game_date: date):
 
     print(f'Reversed {len(teams)} teams')
     
-
+  
 
         
 
