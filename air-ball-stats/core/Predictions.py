@@ -31,6 +31,9 @@ def make_predictions_day(airBallApi : AirBallApi,
     for game in nextdaygames:
         hometeam = db.GetTeamFromDatabase(game[airBallApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[airBallApi.AWAY])
+        # validate games before sending
+        if hometeam.gamesplayed() < 10 or awayteam.gamesplayed() < 10:
+            continue
         prediction = airBallApi.makePrediction(
             hometeam, awayteam, currentdate, MINGAMES)
         hometeambettingline = 999
