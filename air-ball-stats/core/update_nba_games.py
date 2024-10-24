@@ -7,6 +7,7 @@ import requests
 from model.NbaGameStats import NbaGameStats
 from model.NbaSeasonStats import NbaSeasonStats
 from model.Prediction import Prediction
+from model.AirBallPerformance import AirBallPerformance
 from database.Database import Database
 from service.NbaApi import NbaApi
 from service.AirBallApi import AirBallApi
@@ -41,6 +42,7 @@ def update_nba_games():
         currentdategames = nbaApi.get_played_games_on_date(dateToSlashesString(currentdate))
 
         yesterday_predictions: list[Prediction] = db.GetPredictionByDate(currentdate)
+        air_ball_performance = AirBallPerformance()
         for game in currentdategames.values():
             # update daily stats
             home_game: NbaGameStats = game[nbaApi.HOME]
@@ -59,9 +61,14 @@ def update_nba_games():
                 if prediction.hometeamname == home_game.team_name \
                 and prediction.awayteamname == away_game.team_name:
                     prediction.hometeamplusminusresult = home_game.plus_minus
+                    air_ball_performance.add_bet(prediction.hometeamplusminusresult,
+                                                 prediction.hometeamlineodds,
+                                                 prediction.hometeamplusminusprediction)
             
         if SLEEPMODE: time.sleep(len(currentdategames))      
         db.AddPredictions(currentdate, yesterday_predictions)
+        if SLEEPMODE: time.sleep(len(currentdategames))
+        db.EditAirBallPerformance(air_ball_performance)
         if SLEEPMODE: time.sleep(len(currentdategames))
         
         # sos and rank daily cumulative stats

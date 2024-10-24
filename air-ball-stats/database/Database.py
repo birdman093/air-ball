@@ -3,6 +3,7 @@ import logging
 from model.NbaSeasonStats import NbaSeasonStats
 from model.DailyScriptParameters import DailyScriptParameters
 from model.Prediction import Prediction
+from model.AirBallPerformance import AirBallPerformance
 from database.AwsTableDb import AwsTableDb
 from utility.dates import dateToDashesString, slashesStringToDate, dateToSlashesString
 
@@ -111,3 +112,9 @@ class Database:
             return predictions
         except Exception as e:
             raise Exception(f'Failed to Load Predictions for {dateDashes}') from e
+        
+    def EditAirBallPerformance(self, air_ball_performance: AirBallPerformance):
+        air_ball_json = self.db.getTablePerformance()
+        air_ball_performance_db = AirBallPerformance().from_json(air_ball_json)
+        air_ball_performance_db.merge_performance(air_ball_performance)
+        self.db.setTablePerformance(air_ball_performance_db.to_json())

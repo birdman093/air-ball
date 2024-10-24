@@ -23,6 +23,7 @@ class AwsTableDb:
         self.teamtable = 'airBallDb_24_25' #Yearly Table
         self.partitionkey = 'teamName'
         self.configpartitionvalue = 'Configuration'
+        self.performance_partition_value = 'Performance'
 
         # prediction data
         self.prediction_table = 'predictionDb'
@@ -85,11 +86,12 @@ class AwsTableDb:
         # Scan operation with a filter expression to exclude the config item
         response = self.dynamodb.scan(
             TableName=self.teamtable,
-            FilterExpression=f"{self.partitionkey} <> :configVal",
-            ExpressionAttributeValues={
-                ':configVal': {'S': self.configpartitionvalue}
-            },
-            Limit=50
+        FilterExpression=f"{self.partitionkey} <> :configVal AND {self.partitionkey} <> :performanceVal",
+        ExpressionAttributeValues={
+            ':configVal': {'S': self.configpartitionvalue},
+            ':performanceVal': {'S': self.performance_partition_value}
+        },
+        Limit=50
         )
         items = response['Items']
         processedItems = [json.loads(item['data']['S']) for item in items]
@@ -113,6 +115,28 @@ class AwsTableDb:
             TableName=self.teamtable,
             Item={
                 self.partitionkey: {'S': self.configpartitionvalue},
+                'data': {'S': serializeddata}
+            }
+        )
+
+    def getTablePerformance(self) -> dict:
+        response = self.dynamodb.get_item(
+            TableName=self.teamtable,
+            Key={
+                self.partitionkey: {'S': self.performance_partition_value}
+            }
+        )
+        response = response.get('Item', None)
+        if response and 'data' in response and 'S' in response['data']:
+            return json.loads(response['data']['S'])
+        else:
+            return {}
+    
+    def setTablePerformance(self, serializeddata: str):
+        self.dynamodb.put_item(
+            TableName=self.teamtable,
+            Item={
+                self.partitionkey: {'S': self.performance_partition_value},
                 'data': {'S': serializeddata}
             }
         )
