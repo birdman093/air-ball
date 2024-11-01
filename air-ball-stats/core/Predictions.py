@@ -16,6 +16,7 @@ from scripts.logos import *
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 MINGAMES = 10
+INVALID_BET = 999
 
 def make_predictions_day(airBallApi : AirBallApi, 
                           nbaBettingLine: NbaBettingLine, 
@@ -38,7 +39,7 @@ def make_predictions_day(airBallApi : AirBallApi,
         else:
             prediction = {}
         
-        hometeambettingline = 999
+        hometeambettingline = INVALID_BET
         if currentdatedashes == todaydatedashes:
             hometeambettingline = get_betting_line(bettingline, hometeam.name)
             logger.info(f'Prediction Created: {awayteam.name} @ {hometeam.name} {hometeambettingline}')
@@ -58,8 +59,11 @@ def get_betting_line(bettingline: dict[str,float], teamname) -> float:
     line: float | None = bettingline.get(teamname)
     if not line and teamname in teamNameConversion:
         line = bettingline.get(teamNameConversion[teamname])
-    if not line: return 999
+    if not line: return INVALID_BET
     return line
+
+def check_valid_bet(line):
+    return line != INVALID_BET
 
 
 teamNameConversion = {

@@ -14,7 +14,7 @@ from service.AirBallApi import AirBallApi
 from service.BettingLine import NbaBettingLine
 from utility.dates import *
 from scripts.logos import *
-from core.predictions import make_predictions_day
+from core.predictions import make_predictions_day, check_valid_bet
 from core.rankings import update_season_rankings
 
 MINGAMES = 10
@@ -57,13 +57,16 @@ def update_nba_games():
             db.EditTeamInDatabase(away_game.team_name, away_season)
 
             # update yesterday's predictions
+            ##  ** FUNCTION **
             for prediction in yesterday_predictions:
                 if prediction.hometeamname == home_game.team_name \
                 and prediction.awayteamname == away_game.team_name:
                     prediction.hometeamplusminusresult = home_game.plus_minus
-                    air_ball_performance.add_bet(prediction.hometeamplusminusresult,
+                    if check_valid_bet(prediction.hometeamplusminusprediction):
+                        air_ball_performance.add_bet(prediction.hometeamplusminusresult,
                                                  prediction.hometeamlineodds,
                                                  prediction.hometeamplusminusprediction)
+            ##  ** FUNCTION **
             
         if SLEEPMODE: time.sleep(len(currentdategames))      
         db.AddPredictions(currentdate, yesterday_predictions)
