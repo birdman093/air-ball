@@ -1,4 +1,4 @@
-import { endAirBall } from "./dateRanges";
+import { END_AIR_BALL, SEASON_DATE_RANGES } from "../season_config/dateRanges";
 
 const SERVER_RUN_TIME = -10; // UTC+0 10am || UTC-10
 
@@ -28,7 +28,7 @@ export const todayDate = () => {
     const todayDate = createCurrentDateUTCPlus10();
     todayDate.setHours(0, 0, 0, 0);
 
-    const [year, month, day] = endAirBall.split("-")
+    const [year, month, day] = END_AIR_BALL.split("-")
     const maxDate = getDateInUTCPlus10(Number(year), Number(month), Number(day));
     maxDate.setHours(0, 0, 0, 0);
 
@@ -59,6 +59,17 @@ export const yesterdayDate = (maxDateString: string) => {
     return effectiveDate.toISOString().split('T')[0];
 };
 
+export const getYesterdayDate = () => {
+    // Create a new Date object for 'yesterday' in Pacific Time
+    const todayPST = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+    const todayDate = new Date(todayPST);
+
+    // Subtract one day to get 'yesterday'
+    todayDate.setDate(todayDate.getDate() - 1);
+    todayDate.setHours(0, 0, 0, 0); // Normalize 'yesterday' to start of the day in PST
+
+    return todayDate.toISOString().split('T')[0];
+};
 
 
 export const nbaGamesNextDayDate = (today: string) => {
@@ -91,3 +102,17 @@ export const isDateToday = (gameDate: string) => {
     // Compare the input date string to today's date string
     return gameDate === todayStr;
   };
+
+export const dateWithinAllowableDateRanges = (date: string) => {
+    if (getYesterdayDate() < date) {
+        return false
+    }
+
+    for (const daterange of SEASON_DATE_RANGES) {
+        if (date >= daterange.minDate && date <= daterange.maxDate) {
+            return true
+        }
+    }
+    
+    return false
+}

@@ -6,6 +6,8 @@ import { calculateGradientColor } from '@/util/conditional'
 import '../styles/teams.css';
 import '../styles/today.css';
 
+const INVALID_BET = 999;
+
 export function gameTable(games: nbaGame[]) {
 
     return (
@@ -23,18 +25,16 @@ export function gameTable(games: nbaGame[]) {
       </thead>
       <tbody className="games-row">
         {games.map((game, index) => { 
-          let difference = 0
-          if (game.hometeamline < 100 && game.homeairballline < 100) {
-            difference = Math.abs(game.hometeamline - game.homeairballline);
-          }
+          console.log(game.homeairballline)
+          const difference = Math.abs(game.homeairballline) === INVALID_BET ? 
+          0 : Math.abs(game.hometeamline - game.homeairballline);
 
           let borderColor = 'transparent';
           if (difference >= 10) {
             borderColor = 'red';
           } else if (difference >= 7){
             borderColor = '#FA8320';
-          } 
-          else if (difference >= 5 ){
+          } else if (difference >= 5 ){
             borderColor = 'yellow';
           }    
           
