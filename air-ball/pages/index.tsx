@@ -15,7 +15,8 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async (context) => {
   const today = todayDate();
   const todaygames: nbaGame[] = await NbaGamesByDate(today);
-  return { props: { todaygames } };
+  const record = {};
+  return { props: { todaygames} };
 };
 
 export default function Daily({

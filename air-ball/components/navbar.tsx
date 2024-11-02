@@ -8,6 +8,7 @@ export default function Header() {
                 <li><img src="./air-ball.png" alt="Air Ball" className="navBar-icon" /></li>
                 <li className = "navBarLinksLi"><Link className = "navBarLinks" href="/">Daily Picks</Link></li>
                 <li className = "navBarLinksLi"><Link className = "navBarLinks" href="/record">Past Picks</Link></li>
+                <li className = "navBarLinksLi"><Link className = "navBarLinks" href="/graph">Season Stats</Link></li>
                 <li className = "navBarLinksLi"><Link className = "navBarLinks" href="/about">About</Link></li>
             </ul>
         </div>
