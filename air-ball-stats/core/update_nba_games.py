@@ -39,12 +39,13 @@ def update_nba_games():
     if SLEEPMODE: time.sleep(1)
 
     while currentdate <= enddate:
-        currentdategames = nbaApi.get_played_games_on_date(dateToSlashesString(currentdate))
+        currentdategames: dict[str, dict[str, NbaGameStats]] = \
+        nbaApi.get_played_games_on_date(dateToSlashesString(currentdate))
 
         yesterday_predictions: list[Prediction] = db.GetPredictionByDate(currentdate)
         air_ball_performance = AirBallPerformance()
         for game in currentdategames.values():
-            # update daily stats
+            # ** Update Cumulative Team Stats With Results **
             home_game: NbaGameStats = game[nbaApi.HOME]
             away_game: NbaGameStats = game[nbaApi.AWAY]
             home_season: NbaSeasonStats = db.GetTeamFromDatabase(home_game.team_name)
@@ -56,8 +57,7 @@ def update_nba_games():
             db.EditTeamInDatabase(home_game.team_name, home_season)
             db.EditTeamInDatabase(away_game.team_name, away_season)
 
-            # update yesterday's predictions
-            ##  ** FUNCTION **
+            # ** Update Yesterday's Predictions With Result **
             for prediction in yesterday_predictions:
                 if prediction.hometeamname == home_game.team_name \
                 and prediction.awayteamname == away_game.team_name:
@@ -66,31 +66,23 @@ def update_nba_games():
                         air_ball_performance.add_bet(prediction.hometeamplusminusresult,
                                                  prediction.hometeamlineodds,
                                                  prediction.hometeamplusminusprediction)
-            ##  ** FUNCTION **
-            
+        
+        # ** Add Predictions And Aggregate Stats to DB **
         if SLEEPMODE: time.sleep(len(currentdategames))      
         db.AddPredictions(currentdate, yesterday_predictions)
         if SLEEPMODE: time.sleep(len(currentdategames))
         db.EditAirBallPerformance(air_ball_performance)
         if SLEEPMODE: time.sleep(len(currentdategames))
         
-        # sos and rank daily cumulative stats
+        # ** Update Cumulative season Rankings in DB **
         update_season_rankings(db)
         if SLEEPMODE: time.sleep(30)
 
-        # make predictions for next day
+        # ** Create Predictions for Today's Games **
         currentdate += timedelta(days=1)
         make_predictions_day(airBallApi, nbaBettingLine, db, currentdate)
         
     db.setdailyscriptparameters()
     logging.info("** Update NBA Games Completed **")
 
-def test_working():
-    # NBA API test
-    nbaApi = NbaApi("2023-24")
-    logging.info(nbaApi.get_played_games_on_date("04/28/2024"))
 
-    # DB test
-    db = Database()
-    knicks = db.GetTeamFromDatabase("New York Knicks")
-    logging.info(f"Retrieved data: {knicks}")
