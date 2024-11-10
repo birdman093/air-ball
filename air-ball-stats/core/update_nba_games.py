@@ -86,7 +86,7 @@ def update_nba_games():
 
         # ** Create Predictions for Today's Games **
         currentdate += timedelta(days=1)
-        #make_predictions_day(airBallApi, nbaBettingLine, db, currentdate)
+        make_predictions_day(airBallApi, nbaBettingLine, db, currentdate)
         
     db.setdailyscriptparameters()
     logging.info("** Update NBA Games Completed **")
