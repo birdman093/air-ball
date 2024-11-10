@@ -13,6 +13,8 @@ def reversal(teams: list[str], game_date: date):
     games = nbaApi.get_played_games_on_date(dateToSlashesString(game_date))
     reversed = 0
     for game in games.values():
+        if nbaApi.HOME not in game or nbaApi.AWAY not in game:
+            continue
         home_game: NbaGameStats = game[nbaApi.HOME]
         away_game: NbaGameStats = game[nbaApi.AWAY]
         home_season: NbaSeasonStats = db.GetTeamFromDatabase(home_game.team_name)
@@ -30,9 +32,16 @@ def reversal(teams: list[str], game_date: date):
 
     print(f'Reversed {len(teams)} teams')
     
-  
-
-        
-
-
+if __name__ == "__main__":
+    teams = teams = [
+    "San Antonio Spurs",
+    "Utah Jazz",
+    "LA Clippers",
+    "Toronto Raptors",
+    "Cleveland Cavaliers",
+    "Brooklyn Nets",
+    "Atlanta Hawks",
+    "Chicago Bulls"
+    ]
+    reversal(teams, date(2024, 11, 9))
     
