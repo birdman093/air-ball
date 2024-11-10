@@ -3,7 +3,7 @@ import sys
 import logging
 import time, datetime
 import pytz
-from core.update_nba_games import update_nba_games, test_working
+from core.update_nba_games import update_nba_games
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
