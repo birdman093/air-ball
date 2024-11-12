@@ -33,7 +33,7 @@ def make_predictions_day(airBallApi : AirBallApi,
         hometeam = db.GetTeamFromDatabase(game[airBallApi.HOME])
         awayteam = db.GetTeamFromDatabase(game[airBallApi.AWAY])
 
-        if hometeam.gamesplayed() >= MINGAMES or awayteam.gamesplayed() >= MINGAMES:
+        if hometeam.gamesplayed() >= MINGAMES and awayteam.gamesplayed() >= MINGAMES:
             prediction = airBallApi.makePrediction(
             hometeam, awayteam, currentdate, MINGAMES)
         else:
