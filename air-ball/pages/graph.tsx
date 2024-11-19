@@ -94,8 +94,8 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
       display: 'flex', 
       justifyContent: 'center', 
       alignItems: 'center', 
-      width: '60%', 
-      height: '100vh',
+      width: '80%', 
+      height: '80vh',
       margin: '0 auto'
     }}>
       <BarChart
@@ -119,8 +119,6 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
           */
           return null;
         }}
-        width={600}
-        height={400}
       />
     </div>
   );
