@@ -29,7 +29,7 @@ class NbaBettingLine:
         points = {}
         for game in result:
             for bookmaker in game['bookmakers']:
-                if bookmaker['key'] == 'draftkings':
+                if bookmaker['key'] == 'fanduel':
                     for market in bookmaker['markets']:
                         if market['key'] == 'spreads':
                             for outcome in market['outcomes']:
