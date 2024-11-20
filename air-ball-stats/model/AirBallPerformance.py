@@ -1,9 +1,12 @@
 from collections import defaultdict
-import json
+import json, logging
 
 WIN = "win"
 LOSS = "loss"
 TIE = "tie"
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 class AirBallPerformance:
     def __init__(self):
@@ -25,6 +28,7 @@ class AirBallPerformance:
         else: 
             self.betting_diff_map[rounded_bet_difference][LOSS] += 1
             self.overall_map[LOSS] += 1
+        logger.info(f"Added Bet: Result:{bet_win}, Result-Line:{result_line}, Game-Line:{game_line}, Prediction: {prediction_line}")
 
     def merge_performance(self, merge_performance: 'AirBallPerformance'):
         for difference, performance in merge_performance.betting_diff_map.items():
