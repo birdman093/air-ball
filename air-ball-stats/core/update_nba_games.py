@@ -67,7 +67,7 @@ def update_nba_games():
                     prediction.hometeamplusminusresult = home_game.plus_minus
                     if check_valid_bet(prediction.hometeamplusminusprediction):
                         air_ball_performance.add_bet(prediction.hometeamplusminusresult,
-                                                 prediction.hometeamlineodds,
+                                                 prediction.hometeamlineodds * -1, # reversal of odds 
                                                  prediction.hometeamplusminusprediction)
         # ** Edit Team Data in DB **
         for name, season in edit_teams:
