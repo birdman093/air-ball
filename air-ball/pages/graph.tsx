@@ -95,7 +95,7 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
       justifyContent: 'center', 
       alignItems: 'center', 
       width: '80%', 
-      height: '80vh',
+      height: '60vh',
       margin: '0 auto'
     }}>
       <BarChart
@@ -104,8 +104,10 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
           {
             scaleType: 'band',
             data: keyData,
+            label: 'Difference: Air Ball Line Prediction Minus Fanduel Game Line'
           },
         ]}
+        yAxis={[{label: 'Predictions Made'}]}
         barLabel={(item, _) => {
           /*
           const { seriesId, dataIndex } = item;
