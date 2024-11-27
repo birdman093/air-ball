@@ -54,7 +54,7 @@ class Database:
     def GetTeamFromDatabase(self, teamname: str) -> NbaSeasonStats:
         try:
             result = self.db.getFromDb(teamname)
-            logger.info(f'Get Team: {teamname} loaded from database')
+            #logger.info(f'Get Team: {teamname} loaded from database')
         except Exception as e:
             raise Exception(f'Get Team: {teamname} Failed') from e
 
@@ -98,7 +98,7 @@ class Database:
         try:
             self.db.setPrediction(dateToDashesString(date), 
                 [prediction.to_json() for prediction in predictions])
-            logger.info(f'{len(predictions)} Predictions Created in Database')
+            #logger.info(f'{len(predictions)} Predictions Created in Database')
         except Exception as e:
             raise Exception(
                 f'Failed to Create Prediction for {date} and {predictions}') from e
@@ -117,4 +117,6 @@ class Database:
         air_ball_json = self.db.getTablePerformance()
         air_ball_performance_db = AirBallPerformance().from_json(air_ball_json)
         air_ball_performance_db.merge_performance(air_ball_performance)
+        logger.info(f'daily air_ball_performance: {air_ball_performance}')
+        logger.info(f'merged air_ball_performance: {air_ball_performance_db}')
         self.db.setTablePerformance(air_ball_performance_db.to_json())
