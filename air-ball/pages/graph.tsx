@@ -109,9 +109,14 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
               scaleType: 'band',
               data: keyData,
               label: '+/- Prediction - GameLine Differential',
+              labelStyle: { fontSize: '14px', fontWeight: 'bold' }
             },
           ]}
-          yAxis={[{ label: 'Games Played (W, L, Win %)' }]}
+          yAxis={[{ 
+            label: 'Games Played (W, L, Win %)',
+            labelStyle: { fontSize: '14px', fontWeight: 'bold'}  
+            }
+          ]}
           barLabel={(item, _) => {
             return null;
           }}
