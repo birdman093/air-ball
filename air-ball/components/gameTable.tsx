@@ -53,24 +53,25 @@ export function gameTable(games: nbaGame[]) {
           return ( 
           <tr key={index} style={trStyle}>   
             <td className='td-img'>
-              <TeamDisplay imageUrl={game.awayteamimageurl} abbreviation={game.awayteam_abbr} />
+              <TeamDisplay imageUrl={getTeamImage(game.awayteam)} abbreviation={game.awayteam_abbr} />
             </td>
             <td className='td-img'>
               {'@'}
             </td>
             <td className='td-img' >
-              <TeamDisplay imageUrl={game.hometeamimageurl} abbreviation={game.hometeam_abbr} />
+              <TeamDisplay imageUrl={getTeamImage(game.hometeam)} abbreviation={game.hometeam_abbr} />
             </td>
             <td>{new Date(game.gametime).toLocaleTimeString()}</td>
             <td className='img-line-left'>
-              {lineToImg(game.hometeamline, game.hometeamimageurl, game.awayteamimageurl)}
+              {lineToImg(game.hometeamline, getTeamImage(game.hometeam), 
+              getTeamImage(game.awayteam))}
             </td>
             <td className='img-line-right'>
               {lineToString(game.hometeamline, game.hometeam_abbr, game.awayteam_abbr)}
             </td>
             <td className='img-line-left'>
-              {lineToImg(game.homeairballline, game.hometeamimageurl, 
-              game.awayteamimageurl)}
+              {lineToImg(game.homeairballline, getTeamImage(game.hometeam), 
+              getTeamImage(game.awayteam))}
             </td>
             <td className='img-line-right'>
               {lineToString(game.homeairballline, game.hometeam_abbr, 
