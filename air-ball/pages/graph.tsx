@@ -89,58 +89,54 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
   ];
 
   return (
-    <div style={{
-      background: 'white', 
-      display: 'flex', 
-      flexDirection: 'column',
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      width: '80%', 
-      height: '60vh',
-      margin: '0 auto'
-    }}>
-      <BarChart
-        series={series}
-        title={'Cumulative Prediction +/- Differential'}
-        xAxis={[
-          {
-            scaleType: 'band',
-            data: keyData,
-            label: '+/- Prediction - GameLine Differential'
-          },
-        ]}
-        yAxis={[{label: 'Games Played (W, L, Win %)'}]}
-        barLabel={(item, _) => {
-          /*
-          const { seriesId, dataIndex } = item;
-          if (seriesId === WIN_ID_SERIES) {
-            const wins = series[0].data[dataIndex];
-            const losses = series[1].data[dataIndex];
-            if (wins === 0 && losses == 0){ return '';}
-            const winPercentage = ((wins / (wins+losses)) * 100).toFixed(2) + '%';
-            return winPercentage;
-          }
-          */
-          return null;
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <div
+        style={{
+          background: 'white',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          margin: '0 auto',
+          width: '90%',
+          height: '400px',
         }}
-      />
-      <br/>
-      <div style={{justifyContent: 'left', color: 'black'}}>
-        <h2>Notes:</h2>
+      >
+        <BarChart
+          series={series}
+          title={'Cumulative Prediction +/- Differential'}
+          xAxis={[
+            {
+              scaleType: 'band',
+              data: keyData,
+              label: '+/- Prediction - GameLine Differential',
+            },
+          ]}
+          yAxis={[{ label: 'Games Played (W, L, Win %)' }]}
+          barLabel={(item, _) => {
+            return null;
+          }}
+        />
+      </div>
+      <div style={{ textAlign: 'left', marginTop: '20px', margin: '0 auto', marginBottom: '50px', color: 'white',
+        width: '90%',
+       }}>
+        <h2>Cumulative Prediction +/- Differential Notes:</h2>
         <div>
           <h3>Differentials</h3>
-          <div>{'+ Differential: (0.5, 1.0... 20.0...): Result(Prediction - GameLine >= Differential)'}</div>
-          <div>{'- Differential: (-0.5, -1.0... -20.0...): Result(Prediction - GameLine <= Differential)'}</div>
-          <div>{'0 Differential: Result(Prediction - GameLine)'}</div>
+          <div>{'(+) Positive Differential: ∑(Result(AirBallLine - GameLine >= +Differential))'}</div>
+          <div>{'(-) Negative Differential: ∑(Result(AirBallLine - GameLine <= -Differential))'}</div>
+          <div>{'(0) No Differential: ∑(Result(AirBallLine - GameLine))'}</div>
         </div>
         <div>
           <h3>Results</h3>
-          <div>{'Result: True -> Win'}</div>
-          <div>{'Result: False -> Loss'}</div>
-          <div>{'Prediction = Gameline -> Tie'}</div>
+          <div>{'AirBallLine - GameLine = (+)Differential -> Win if ResultLine > GameLine, Tie if ResultLine = Gameline, else Loss'}</div>
+          <div>{'AirBallLine - GameLine = (-)Differential -> Win if ResultLine < GameLine, Tie if ResultLine = Gameline, else Loss'}</div>
+          <div>{'AirBallLine - GameLine = (0)Differential -> Tie'}</div>
+          <div>{'Note: All lines converted to home team for differential calculations'}</div>
         </div>
       </div>
     </div>
+
   );
 };
 
