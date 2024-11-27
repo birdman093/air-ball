@@ -92,6 +92,7 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
     <div style={{
       background: 'white', 
       display: 'flex', 
+      flexDirection: 'column',
       justifyContent: 'center', 
       alignItems: 'center', 
       width: '80%', 
@@ -100,14 +101,15 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
     }}>
       <BarChart
         series={series}
+        title={'Cumulative Prediction +/- Differential'}
         xAxis={[
           {
             scaleType: 'band',
             data: keyData,
-            label: 'Difference: Air Ball Line Prediction Minus Fanduel Game Line'
+            label: '+/- Prediction - GameLine Differential'
           },
         ]}
-        yAxis={[{label: 'Predictions Made'}]}
+        yAxis={[{label: 'Games Played (W, L, Win %)'}]}
         barLabel={(item, _) => {
           /*
           const { seriesId, dataIndex } = item;
@@ -122,6 +124,22 @@ const SeasonStats: NextPageWithLayout<GameProps> = ({ performanceMap }) => {
           return null;
         }}
       />
+      <br/>
+      <div style={{justifyContent: 'left', color: 'black'}}>
+        <h2>Notes:</h2>
+        <div>
+          <h3>Differentials</h3>
+          <div>{'+ Differential: (0.5, 1.0... 20.0...): Result(Prediction - GameLine >= Differential)'}</div>
+          <div>{'- Differential: (-0.5, -1.0... -20.0...): Result(Prediction - GameLine <= Differential)'}</div>
+          <div>{'0 Differential: Result(Prediction - GameLine)'}</div>
+        </div>
+        <div>
+          <h3>Results</h3>
+          <div>{'Result: True -> Win'}</div>
+          <div>{'Result: False -> Loss'}</div>
+          <div>{'Prediction = Gameline -> Tie'}</div>
+        </div>
+      </div>
     </div>
   );
 };
