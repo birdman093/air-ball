@@ -1,11 +1,15 @@
 import { nbaGame } from "@/datatypes/apigame";
 
+export const roundLine = (line: number) => {
+    return Math.round(line * 4) / 4;
+}
+
 export const lineToString = (hometeamline: number, 
     hometeam_aabr: string, awayteam_aabr: string) => {
     if (Math.abs(hometeamline) > 100){
         return `N/A`
     } else {
-        const homelinevalue = Math.round(hometeamline * 4) / 4
+        const homelinevalue = roundLine(hometeamline);
         if (homelinevalue === 0){
             return `Even`
         } else if (homelinevalue > 0) {
@@ -21,7 +25,7 @@ export const lineToImg = (hometeamline: number,
     if (Math.abs(hometeamline) > 100){
         return <></>
     } else {
-        const homelinevalue = Math.round(hometeamline * 4) / 4
+        const homelinevalue = roundLine(hometeamline);
         if (homelinevalue === 0){
             return <></>
         } else if (homelinevalue > 0) {

@@ -8,7 +8,7 @@ import { nbaGame } from '@/datatypes/apigame';
 import { todayDate, yesterdayDate, dateWithinAllowableDateRanges } from '@/util/date';
 import '../styles/today.css';
 import { PastNbaGamesByDate } from '@/services/NbaGamesByDate';
-import { pastGameTable } from '@/components/gameTable';
+import { pastGameTable } from '@/components/pastGameTable';
 import { END_AIR_BALL, BEGIN_AIR_BALL } from '@/season_config/dateRanges';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
