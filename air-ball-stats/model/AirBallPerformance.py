@@ -10,7 +10,7 @@ logger.setLevel(logging.INFO)
 
 class AirBallPerformance:
     def __init__(self):
-        self.betting_diff_map = defaultdict(lambda: {WIN: 0, LOSS: 0, TIE: 0})
+        self.betting_diff_map: dict[str, dict[str, int]] = defaultdict(lambda: {WIN: 0, LOSS: 0, TIE: 0})
         self.overall_map = {WIN: 0, LOSS: 0, TIE: 0}
 
     def add_bet(self, result_line: float, game_line: float, prediction_line: float):
@@ -18,15 +18,16 @@ class AirBallPerformance:
         result_difference = result_line - game_line
         bet_win = (rounded_bet_difference > 0 and result_difference > 0) or \
         (rounded_bet_difference < 0 and result_difference < 0)
+        str_res_diff = f"{rounded_bet_difference:.1f}"
         
         if bet_win: 
-            self.betting_diff_map[rounded_bet_difference][WIN] += 1
+            self.betting_diff_map[str_res_diff][WIN] += 1
             self.overall_map[WIN] += 1
         elif result_difference == 0:
-            self.betting_diff_map[rounded_bet_difference][TIE] += 1
+            self.betting_diff_map[str_res_diff][TIE] += 1
             self.overall_map[TIE] += 1
         else: 
-            self.betting_diff_map[rounded_bet_difference][LOSS] += 1
+            self.betting_diff_map[str_res_diff][LOSS] += 1
             self.overall_map[LOSS] += 1
         logger.info(f"Added Bet: Result:{bet_win}, Result-Line:{result_line}, Game-Line:{game_line}, Prediction: {prediction_line}")
 
