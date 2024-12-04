@@ -103,7 +103,7 @@ export function gameTable(games: nbaGame[]) {
                 marks={marks}
                 step={0.5}
                 min={Math.min(MIN_SLIDER, marks.reduce((min, obj) => Math.min(min, obj.value), Infinity))}
-                max={Math.max(MAX_SLIDER, marks.reduce((min, obj) => Math.min(min, obj.value), Infinity))}
+                max={Math.max(MAX_SLIDER, marks.reduce((min, obj) => Math.max(min, obj.value), -1*Infinity))}
                 slots={{
                   mark: ({ className, style, 'data-index': index }) => {
                     const mark = marks[index];

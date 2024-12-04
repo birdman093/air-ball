@@ -99,7 +99,7 @@ export function pastGameTable(games: nbaGame[]) {
                         )}
                         max={Math.max(
                             MAX_SLIDER,
-                            marks.reduce((min, obj) => Math.min(min, obj.value), Infinity)
+                            marks.reduce((min, obj) => Math.max(min, obj.value), -1*Infinity)
                         )}
                         slots={{
                             mark: ({ className, style, "data-index": index }) => {
