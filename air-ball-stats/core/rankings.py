@@ -18,17 +18,12 @@ logger.setLevel(logging.INFO)
 
 WINPCTTOLERANCE = .001
 
-def update_season_rankings(db: Database) -> None:
-    logger.info('*** Start Update Season Rankings ***')
-    team: NbaSeasonStats
-    allteams: list[NbaSeasonStats] = db.GetAllTeamsFromDatabase()    
-    allteams.sort(key=lambda team: team._winpct(), reverse=True) # sort highest
-    previousteam = allteams[0] if len(allteams) > 0 else None
+def update_season_rankings(teams: list[NbaSeasonStats]) -> None:
+    teams.sort(key=lambda team: team._winpct(), reverse=True) # sort highest
+    previousteam = teams[0] if len(teams) > 0 else None
     if not previousteam: return
     rank = 1
-    for idx, team in enumerate(allteams):
+    for idx, team in enumerate(teams):
         if previousteam._winpct() - team._winpct() > WINPCTTOLERANCE:
             rank = idx + 1
         team.setrank(rank)
-    db.EditAllTeamsInDatabase(allteams)
-    logger.info('*** End Update Season Rankings ***')
