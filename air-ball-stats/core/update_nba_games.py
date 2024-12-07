@@ -47,11 +47,10 @@ def update_nba_games():
         air_ball_performance = AirBallPerformance()
         edit_teams = EditNbaSeasonStats(db.GetAllTeamsFromDatabase(), db.year)
         for game in currentdategames.values():
-            if nbaApi.HOME not in game or nbaApi.AWAY not in game:
-                continue
+            if nbaApi.invalid_nba_game_stats(game): continue
             home_game: NbaGameStats = game[nbaApi.HOME]
             away_game: NbaGameStats = game[nbaApi.AWAY]
-            home_plus_minus = home_game.plus_minus;
+            home_plus_minus = home_game.plus_minus
             update_season_stats(home_game, away_game, edit_teams)
 
             # ** Update Yesterday's Predictions With Result **

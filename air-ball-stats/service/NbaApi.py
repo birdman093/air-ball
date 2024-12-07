@@ -61,3 +61,7 @@ class NbaApi:
 
         return uniquegameids
     
+    def invalid_nba_game_stats(self, game: dict[str, NbaGameStats]) -> bool:
+        return self.HOME not in game or self.AWAY not in game
+
+    
