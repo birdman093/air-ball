@@ -63,5 +63,8 @@ class NbaApi:
     
     def invalid_nba_game_stats(self, game: dict[str, NbaGameStats]) -> bool:
         return self.HOME not in game or self.AWAY not in game
+    
+    def get_home_away_tuple(self, game: dict[str, NbaGameStats]) -> tuple[NbaGameStats, NbaGameStats]:
+        return (game[self.HOME], game[self.AWAY])
 
     
