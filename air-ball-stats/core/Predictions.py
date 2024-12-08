@@ -41,15 +41,20 @@ def make_predictions_day(airBallApi : AirBallApi,
         else:
             prediction = {}
         
-        hometeambettingline = INVALID_BET
+        home_team_line = INVALID_BET
         if currentdatedashes == todaydatedashes:
-            hometeambettingline = get_betting_line(bettingline, hometeam.name)
-            logger.info(f'Prediction Created: {awayteam.name} @ {hometeam.name} {hometeambettingline}')
+            home_team_line = get_betting_line(bettingline, hometeam.name)
+            away_team_line = get_betting_line(bettingline, awayteam.name)
+            if nbaBettingLine.invalid_game_lines(home_team_line, away_team_line):
+                home_team_line = INVALID_BET
+                logger.info(f'Conflicting Home/Away Lines Found - No Prediction Created: {awayteam.name} @ {hometeam.name} {home_team_line}')
+            else:
+                logger.info(f'Prediction Created: {awayteam.name} @ {hometeam.name} {home_team_line}')
             
         predictions.append(Prediction(
             hometeam.name, hometeam.gamesplayed(), 
             awayteam.name, awayteam.gamesplayed(),
-            prediction, hometeambettingline,
+            prediction, home_team_line,
             str(hometeam.airballformat(True, currentdate, MINGAMES)),
             str(awayteam.airballformat(False, currentdate, MINGAMES))))
         

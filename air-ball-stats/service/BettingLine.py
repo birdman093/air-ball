@@ -36,3 +36,6 @@ class NbaBettingLine:
                                 points[outcome["name"]] = float(outcome['point'])
         print(f'{len(points)} NBA Game Odds loaded')
         return points
+    
+    def invalid_game_lines(self, home_line: float, away_line:float) -> bool:
+        return abs(abs(home_line) - abs(away_line)) < .1
