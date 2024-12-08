@@ -1,5 +1,5 @@
 from database.Database import Database
-from NbaSeasonStats import NbaSeasonStats
+from model.NbaSeasonStats import NbaSeasonStats
 import logging
 
 logger = logging.getLogger()
