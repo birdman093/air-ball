@@ -13,6 +13,9 @@ https://air-ball.vercel.app
 
 ## Technology, Deployment, and Architecture
 
+### Architecture:
+<img max-height='200px' alt="Screenshot 2024-12-15 at 8 30 47 PM" src="https://github.com/user-attachments/assets/f84e8cfb-8a5d-4017-9cd1-7e0986a6ae5f" />
+
 ### Frontend (air-ball)
 ```
 Next.js with TypeScript
@@ -38,10 +41,6 @@ Live Sports Odds on RapidAPI
 API-NBA on RapidAPI
 Air-Ball API hosted on EC2 
 ```
-
-### Architecture:
-
-<img max-height='200px' src='air-ball/public/architecture.png'>
 
 ## Project Air Ball ML Model
 https://github.com/ryan-t-mitchell/nba_predictions
