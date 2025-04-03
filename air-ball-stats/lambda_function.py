@@ -3,8 +3,7 @@ import sys
 import logging
 import time, datetime
 import pytz
-from core.update_nba_games import update_nba_games
-
+from core.NbaDailyGamesService import NbaDailyGamesService
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -15,7 +14,7 @@ def handler(event, context):
         'America/Los_Angeles')).strftime('%m-%d-%Y')
     logging.info(f"Started update_nba_games at {current_time}")
     # test_working()
-    update_nba_games()
+    NbaDailyGamesService().update_game_stats_by_config()
     end_time = time.time()
     logging.info(f'Finished update_nba_games inz {end_time - start_time} seconds')
 
