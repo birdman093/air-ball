@@ -9,7 +9,10 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 class Database:
-    def __init__(self, reset_parameters = False):
+    def __init__(self, reset_parameters = False, dry_run = False):
+        self.dry_run = dry_run
+        if self.dry_run:
+            logger.info('Database running in dry-run mode')
         self.initialize_connection()
         if reset_parameters:
             self.reset_parameters()
@@ -20,6 +23,7 @@ class Database:
         self.db: AwsTableDb = AwsTableDb()
 
     def reset_parameters(self):
+        logger.info('Database resetting daily parameters')
         self.parameters = DailyScriptParameters()
         self.set_daily_parameters()
 
@@ -44,7 +48,8 @@ class Database:
         self.parameters.startdate = self.parameters.enddate
         
         try:
-            self.db.setTableConfig(self.parameters.to_json())
+            if not self.dry_run:
+                self.db.setTableConfig(self.parameters.to_json())
             logger.info(f'Database set Daily Parameters: {self.parameters}')
         except Exception as e:
             raise Exception('ERROR: Database unable to set Daily Parameters') from e
@@ -64,7 +69,8 @@ class Database:
     def edit_team_in_db(self, teamname: str, 
                            seasonstats: NbaSeasonStats) -> None:
         try:
-            self.db.addToDb(teamname, seasonstats.to_json())
+            if not self.dry_run:
+                self.db.addToDb(teamname, seasonstats.to_json())
         except Exception as e:
             raise Exception(
                 f'Database failed to edit team: {teamname} with stats: {seasonstats}') from e
@@ -84,15 +90,17 @@ class Database:
         serializeddata: list[str] = [team.to_json() for team in seasonstatslist] 
         teamname: list[str] = [team.name for team in seasonstatslist]
         try:
-            self.db.addItemsToDbBatch(teamname, serializeddata)
+            if not self.dry_run:
+                self.db.addItemsToDbBatch(teamname, serializeddata)
             logger.info(f'Database edited {len(seasonstatslist)} teams')
         except Exception as e:
             raise Exception(f'Database failed to edit all teams: {seasonstatslist}') from e
 
     def create_predictions_db(self, date: date, predictions: list[Prediction]): 
         try:
-            self.db.setPrediction(dateToDashesString(date), 
-                [prediction.to_json() for prediction in predictions])
+            if not self.dry_run:
+                self.db.setPrediction(dateToDashesString(date), 
+                    [prediction.to_json() for prediction in predictions])
             logger.info(f'Database created {len(predictions)} predictions for {date}')
         except Exception as e:
             raise Exception(
@@ -112,8 +120,9 @@ class Database:
         air_ball_json = self.db.getTablePerformance()
         air_ball_performance_db = AirBallPerformance().from_json(air_ball_json)
         air_ball_performance_db.merge_performance(air_ball_performance)
-        logger.info(f'merged air_ball_performance: {air_ball_performance_db}')
         try:
-            self.db.setTablePerformance(air_ball_performance_db.to_json())
+            if not self.dry_run:
+                self.db.setTablePerformance(air_ball_performance_db.to_json())
+            logger.info(f'Air Ball Performance updated {air_ball_performance_db}')
         except Exception as e:
             raise Exception('Database failed to edit Air Ball Performance') from e
