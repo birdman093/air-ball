@@ -180,33 +180,6 @@ class NbaSeasonStats:
                 f"{location}_team_opp_2pt_pct": self._opp_2ptpct(), 
                 f"{location}_team_opp_pp100p": self._opp_pp100pp()
                 }
-
-    def mlapiformat(self) -> dict:
-        ''' ML training calculation properties -- Not Used  '''
-        return {
-            'W': self.wins, 
-            'L': self.losses, 
-            'WIN PCT': self.wins / (self.wins + self.losses), 
-            'RANK': self.rank, 
-            '3PM': self._3pm, '3PA': self._3pa, '3PT PCT': self._3pm / self._3pa, 
-            '2PM': self._2pm, '2PA': self._2pa, '2PT PCT': self._2pm / self._2pa, 
-            'PTS': self.pts, 'TO': self.to, 'POSS': self.poss, 
-            'PP100P': 100 * (self.pts/ self.poss), 
-            'EFG': (1.5 * self._3pm + self._2pm)/ (self._3pa + self._2pa), 
-            'ORB': self.orb, 
-            'ORB PCT': self.orb / (self._2pm + self._3pm),
-            'DRB': self.drb, 
-            'DRB PCT': self.drb / self.opp_missed_shots,
-
-            'OPP_MISSED_SHOTS': self.opp_missed_shots,   
-            'OPP_3PM': self.opp_3pm, 'OPP_3PA': self.opp_3pa, 
-            'OPP_3PT PCT': self.opp_3pm / self._3pa, 
-            'OPP_2PM': self.opp_2pm, 'OPP_2PA': self.opp_2pa, 
-            'OPP_2PT PCT': self.opp_2pm / self._2pa, 
-            'OPP_PTS': self.opp_pts, 'OPP_TO': self.opp_to, 'OPP_POSS': self.opp_poss, 
-            'OPP_PP100P': 100 * (self.opp_pts/ self.opp_poss), 
-            'OPP_EFG': (1.5 * self.opp_3pm + self.opp_2pm)/ (self.opp_3pa + self.opp_2pa)
-            }
     
     def to_json(self):
         return json.dumps(self.__dict__)

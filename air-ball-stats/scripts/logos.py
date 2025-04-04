@@ -1,6 +1,7 @@
+''''
 from model.NbaSeasonStats import NbaSeasonStats
 from database.Database import Database
-from service.AirBallApi import AirBallApi
+from services import AirBallApi
 from datetime import date, datetime
 from utility.dates import *
 from datetime import date, datetime, timedelta
@@ -34,4 +35,5 @@ def add_logos() -> None:
         currentdate = currentdate + timedelta(days=1)
 
     db.EditAllTeamsInDatabase(allteams)
-    print(f"Edited {teams} teams")
+    print(f"Edited {teams} teams")'
+'''

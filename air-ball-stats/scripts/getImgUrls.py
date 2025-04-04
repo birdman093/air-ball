@@ -1,5 +1,5 @@
-from database.Database import Database
-from model.NbaSeasonStats import NbaSeasonStats
+from database import Database
+from model import NbaSeasonStats
 
 def getImgUrls():
     db: Database = Database()

@@ -1,4 +1,4 @@
-from database.Database import Database
+from database import Database
 
 def newSeason():
     '''Set Daily Script parameters for new season'''

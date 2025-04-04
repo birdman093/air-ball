@@ -6,7 +6,7 @@ from model.NbaGameStats import NbaGameStats
 from model.NbaSeasonStats import NbaSeasonStats
 from model.Prediction import Prediction
 from database.Database import Database
-from externalApi import NbaApi, AirBallApi, NbaBettingLine
+from externalApi import NbaApi, AirBallApi, NbaBettingLineApi
 from utility import *
 from scripts.logos import *
 

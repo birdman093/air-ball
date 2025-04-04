@@ -1,6 +1,6 @@
 from model.NbaGameStats import NbaGameStats
 from model.NbaSeasonStats import NbaSeasonStats
-from service.NbaApi import NbaApi
+from externalApi import NbaApi
 from database.Database import Database
 from datetime import date
 from utility.dates import dateToSlashesString

@@ -4,7 +4,7 @@ import logging
 
 from model import NbaGameStats, NbaSeasonStats, EditNbaSeasonStats, Prediction, AirBallPerformance
 from database import Database
-from externalApi import NbaApi, AirBallApi, NbaBettingLine
+from externalApi import NbaApi, AirBallApi, NbaBettingLineApi, RapidNbaApi
 from utility import *
 from scripts.logos import *  
 
@@ -18,26 +18,25 @@ teamNameConversion = {
 }
 
 class PredictionService:
-    def __init__(self):
-        pass
+    def __init__(self, season_year):
+        self.nbaApi = NbaApi(season_year)
+        self.airBallApi = AirBallApi()
+        self.nbaBettingLine = NbaBettingLineApi()
 
-    def make_predictions_day(self, airBallApi : AirBallApi, 
-                            nbaBettingLine: NbaBettingLine, 
-                            teams: EditNbaSeasonStats, 
-                            currentdate: date):
+    def make_predictions_day(self, teams: EditNbaSeasonStats, currentdate: date):
         logger.info('*** Start Make Predictions Day ***')
-        nextdaygames: list[dict[str,str]] = airBallApi.getUnPlayedGamesOnDate(currentdate)
-        bettingline: dict[str, float] = nbaBettingLine.get_game_lines()
+        nextdaygames: list[dict[str,str]] = RapidNbaApi().getUnPlayedGamesOnDate(currentdate)
+        bettingline: dict[str, float] = self.nbaBettingLine.get_game_lines()
         predictions: list[Prediction] = []
         todaydatedashes = dateToDashesString(get_today_date_PST())
         currentdatedashes = dateToDashesString(currentdate)
         logger.info(nextdaygames)
         for game in nextdaygames:
-            hometeam = teams.get_team(game[airBallApi.HOME])
-            awayteam = teams.get_team(game[airBallApi.AWAY])
+            hometeam = teams.get_team(game[self.airBallApi.HOME])
+            awayteam = teams.get_team(game[self.airBallApi.AWAY])
 
             if hometeam.gamesplayed() >= MINGAMES and awayteam.gamesplayed() >= MINGAMES:
-                prediction = airBallApi.makePrediction(
+                prediction = self.airBallApi.makePrediction(
                 hometeam, awayteam, currentdate, MINGAMES)
             else:
                 prediction = {}
@@ -46,7 +45,7 @@ class PredictionService:
             if currentdatedashes == todaydatedashes:
                 home_team_line = self.get_betting_line(bettingline, hometeam.name)
                 away_team_line = self.get_betting_line(bettingline, awayteam.name)
-                if nbaBettingLine.invalid_game_lines(home_team_line, away_team_line):
+                if self.nbaBettingLine.invalid_game_lines(home_team_line, away_team_line):
                     home_team_line = INVALID_BET
                     logger.info(f'Conflicting Home/Away Lines Found - No Prediction Created: {awayteam.name} @ {hometeam.name} {home_team_line}')
                 else:

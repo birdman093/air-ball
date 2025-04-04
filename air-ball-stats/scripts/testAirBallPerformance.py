@@ -1,4 +1,4 @@
-from model.AirBallPerformance import AirBallPerformance
+from model import AirBallPerformance
 
 def test_airballperformance():
     air_ball = AirBallPerformance()

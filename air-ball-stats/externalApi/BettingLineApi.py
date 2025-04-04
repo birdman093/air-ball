@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-class NbaBettingLine:
+class NbaBettingLineApi:
     def __init__(self):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         env_path = os.path.join(script_dir, '../credentials', '.env.local')

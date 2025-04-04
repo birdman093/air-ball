@@ -4,7 +4,7 @@ import logging
 
 from model import NbaGameStats, NbaSeasonStats,Prediction, AirBallPerformance, EditNbaSeasonStats
 from database import Database
-from externalApi import NbaApi,AirBallApi, NbaBettingLine
+from externalApi import NbaApi,AirBallApi, NbaBettingLineApi
 from services import PredictionService, RankingService
 from utility import *
 from scripts.logos import *
@@ -16,10 +16,10 @@ class NbaDailyGamesService:
         self.db: Database = Database()
         self.nbaApi: NbaApi = NbaApi(self.db.year) 
         self.airBallApi: AirBallApi = AirBallApi()
-        self.nbaBettingLine = NbaBettingLine()
+        self.nbaBettingLine = NbaBettingLineApi()
         logger = logging.getLogger()
         logger.setLevel(logging.INFO)
-        self.predictionService = PredictionService()
+        self.predictionService = PredictionService(self.db.year)
         self.rankingService = RankingService()
 
     def update_game_stats_by_config(self):
@@ -77,8 +77,6 @@ class NbaDailyGamesService:
         # ** Create Predictions for Today's Games **
         current_date += timedelta(days=1)
         predictions = self.predictionService.make_predictions_day(
-            self.airBallApi, 
-            self.nbaBettingLine, 
             EditNbaSeasonStats(edit_teams_list, self.db.year), current_date)
         self.db.AddPredictions(current_date, predictions)
 

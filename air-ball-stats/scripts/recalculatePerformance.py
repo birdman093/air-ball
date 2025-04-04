@@ -2,11 +2,12 @@ from datetime import datetime, timedelta, date
 from model.AirBallPerformance import AirBallPerformance
 from model.Prediction import Prediction
 from database.Database import Database
-from core.predictions import check_valid_bet
+from services import PredictionService
 from utility.dates import *
 
-def recalculatePerformance(start_date: str, end_date):
+def recalculatePerformance(start_date: str, end_date: str, season_year: str):
     db: Database = Database()
+    predictionService: PredictionService = PredictionService(season_year)
     currentdate = slashesStringToDate(start_date) 
     enddate = slashesStringToDate(end_date) 
     ab_performance = AirBallPerformance()
@@ -15,7 +16,7 @@ def recalculatePerformance(start_date: str, end_date):
     while currentdate <= enddate:
         predictions: list[Prediction] = db.GetPredictionByDate(currentdate)
         for prediction in predictions:
-            if not check_valid_bet(prediction.hometeamplusminusprediction): continue
+            if not predictionService.check_valid_bet(prediction.hometeamplusminusprediction): continue
             ab_performance.add_bet(
                 prediction.hometeamplusminusresult,
                 prediction.hometeamlineodds * -1, # reversal of odds 

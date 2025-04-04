@@ -5,8 +5,7 @@ from datetime import date
 
 from nba_api.stats.endpoints import leaguegamefinder
 from nba_api.stats.static import teams
-
-from model.NbaGameStats import NbaGameStats
+from model import NbaGameStats
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -54,7 +53,7 @@ class NbaApi:
             if game['GAME_ID'] not in uniquegameids:
                 uniquegameids[game['GAME_ID']] = {}
             
-            uniquegameids[game['GAME_ID']][teamside] = NbaGameStats(game)
+            uniquegameids[game['GAME_ID']][teamside] = NbaGameStats(game.to_frame().T)
         
         logger.info(f'{len(uniquegameids)} games loaded ' +
                   f'from LeagueGameFinder on {slashesDate}')
