@@ -34,7 +34,7 @@ class RapidNbaApi:
                             AWAY : awayteam})
                             # f'{self.HOME}_url' : game['teams']['home']['logo'],
                             # f'{self.AWAY}_url' : game['teams']['visitors']['logo']})
-        logger.info(f'{len(data)} API-NBA-V1 Games loaded for {date}')
+        logger.info(f'RapidNbaApi loaded {len(data)} games for {date}')
         return games
     
     def getGamesRequest(self, date):
@@ -48,6 +48,6 @@ class RapidNbaApi:
             response = requests.get(url, headers=headers)
             data = response.json()['response']
         except Exception as e:
-            raise Exception(f'N to retrieve API-NBA-V1 Games on {date}') from e
+            raise Exception(f'RapidNbaApi failed to load games on {date}') from e
         return data
     

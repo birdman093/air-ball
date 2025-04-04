@@ -36,11 +36,9 @@ class NbaApi:
                 date_from_nullable = slashesDate,                                                 
                 date_to_nullable = slashesDate,
                 proxy = self.proxy).get_data_frames()[0]
-            logger.info(f'{len(currentdategames)} teams loaded ' +
-                  f'from LeagueGameFinder on {slashesDate}')
         except Exception as e:
             raise Exception(  
-                f'NBA API failed: league_id_nullable = {self.LEAGUE}, ' +            
+                f'NbaApi failed to load: league_id_nullable = {self.LEAGUE}, ' +            
                 f'season_nullable = {self.year}, ' +      
                 f'date_from_nullable = {slashesDate}, ' +                                                
                 f'date_to_nullable = {slashesDate}') from e
