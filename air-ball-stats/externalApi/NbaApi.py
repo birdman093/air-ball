@@ -54,6 +54,11 @@ class NbaApi:
         
         logger.info(f'{len(uniquegameids)} games loaded ' +
                   f'from LeagueGameFinder on {slashesDate}')
+    
+        for game in uniquegameids.values():
+            if self.invalid_nba_game_stats(game):
+                logger.error(f'** NbaApi Non-Breaking ERROR ** Failed to load game: {game}')
+                del uniquegameids
 
         return uniquegameids
     
@@ -62,5 +67,4 @@ class NbaApi:
     
     def get_home_away_tuple(self, game: dict[str, NbaGameStats]) -> tuple[NbaGameStats, NbaGameStats]:
         return (game[HOME], game[AWAY])
-
-    
+        

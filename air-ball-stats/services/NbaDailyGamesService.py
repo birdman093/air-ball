@@ -51,7 +51,6 @@ class NbaDailyGamesService:
 
         for game in current_date_games.values():
             # ** Update Game Result in Edit Teams Locally **
-            if self.nbaApi.invalid_nba_game_stats(game): continue
             home_game, away_game = self.nbaApi.get_home_away_tuple(game)
             self.update_season_stats(home_game, away_game, current_date_edit_teams)
 
@@ -60,6 +59,7 @@ class NbaDailyGamesService:
             self.predictionService.update_yesterdays_predictions(previous_date_predictions, 
                 home_game.team_name, away_game.team_name, home_plus_minus, 
                 air_ball_performance)
+        logger.info(f'NbaDailyGamesService: Locally Updated Season Stats and Prediction Results for {len(current_date_games)} on {current_date}')   
 
         # ** Add Predictions And Aggregate Stats to DB **     
         self.db.create_predictions_db(current_date, previous_date_predictions)

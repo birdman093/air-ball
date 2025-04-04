@@ -2,8 +2,7 @@ from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 import logging
 
-from model import NbaGameStats, NbaSeasonStats, EditNbaSeasonStats, Prediction, AirBallPerformance
-from database import Database
+from model import EditNbaSeasonStats, Prediction, AirBallPerformance
 from externalApi import NbaApi, AirBallApi, NbaBettingLineApi, RapidNbaApi
 from utility import *
 from scripts.logos import *  
@@ -39,8 +38,6 @@ class PredictionService:
                 if self.nbaBettingLine.invalid_game_lines(home_team_line, away_team_line):
                     home_team_line = INVALID_BET
                     logger.info(f'Conflicting Home/Away Lines Found - No Prediction created: {awayteam.name} @ {hometeam.name} {home_team_line}')
-                else:
-                    logger.info(f'Prediction created: {awayteam.name} @ {hometeam.name} {home_team_line}')
                 
             predictions.append(Prediction(
                 hometeam.name, hometeam.gamesplayed(), 
@@ -65,16 +62,14 @@ class PredictionService:
 
     def update_yesterdays_predictions(self, yesterday_predictions: list[Prediction], 
             home_name: str, away_name: str, home_plus_minus: int,
-            air_ball_performance: AirBallPerformance):
+            air_ball_performance: AirBallPerformance) -> None:
         for prediction in yesterday_predictions:
-            if (
-                prediction.hometeamname == home_name
-                and prediction.awayteamname == away_name
-                ):
+            if prediction.hometeamname == home_name and prediction.awayteamname == away_name:
                 prediction.hometeamplusminusresult = home_plus_minus
                 if self.check_valid_bet(prediction.hometeamplusminusprediction):
                     air_ball_performance.add_bet(
                         prediction.hometeamplusminusresult,
                         prediction.hometeamlineodds * -1,  # reversal of odds
-                        prediction.hometeamplusminusprediction,
-                )
+                        prediction.hometeamplusminusprediction)
+                    return                
+        logger.info(f'** ERROR - NON BREAKING ** PredictionService could not find prediction for {home_name} @ {away_name}')
