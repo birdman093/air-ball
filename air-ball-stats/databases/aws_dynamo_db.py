@@ -2,7 +2,7 @@ import boto3, json, os
 from dotenv import load_dotenv
 from botocore.config import Config
 
-class AwsTableDb:
+class AwsDynamoDb:
     def __init__(self):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         env_path = os.path.join(script_dir, '../credentials', '.env.local')

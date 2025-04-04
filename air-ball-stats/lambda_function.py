@@ -3,7 +3,7 @@ import sys
 import logging
 import time, datetime
 import pytz
-from services.NbaDailyGamesService import NbaDailyGamesService
+from services import NbaDailyGamesService
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 

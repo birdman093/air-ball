@@ -5,7 +5,6 @@ import logging
 from model import EditNbaSeasonStats, Prediction, AirBallPerformance
 from externalApi import NbaApi, AirBallApi, NbaBettingLineApi, RapidNbaApi
 from utility import *
-from scripts.logos import *  
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

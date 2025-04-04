@@ -1,7 +1,7 @@
+'''
 from datetime import datetime, timedelta, date
-from model.AirBallPerformance import AirBallPerformance
-from model.Prediction import Prediction
-from database.Database import Database
+from model import AirBallPerformance, Prediction
+from databases import Database
 from services import PredictionService
 from utility.dates import *
 
@@ -27,4 +27,4 @@ def recalculatePerformance(start_date: str, end_date: str, season_year: str):
     db.edit_air_ball_performance(ab_performance)
     print(ab_performance)
 
-    
+'''

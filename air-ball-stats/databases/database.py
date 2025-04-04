@@ -2,7 +2,7 @@ from datetime import date, timedelta
 import logging
 
 from model import NbaSeasonStats, DailyScriptParameters, Prediction, AirBallPerformance
-from database import AwsTableDb
+from .aws_dynamo_db import AwsDynamoDb
 from utility import dateToDashesString, slashesStringToDate, dateToSlashesString
 
 logger = logging.getLogger()
@@ -20,7 +20,7 @@ class Database:
             self.get_daily_parameters()
 
     def initialize_connection(self) -> None:
-        self.db: AwsTableDb = AwsTableDb()
+        self.db: AwsDynamoDb = AwsDynamoDb()
 
     def reset_parameters(self):
         logger.info('Database resetting daily parameters')

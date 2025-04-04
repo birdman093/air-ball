@@ -1,3 +1,3 @@
-from .NbaDailyGamesService import NbaDailyGamesService
-from .PredictionService import PredictionService
-from .RankingService import RankingService
+from .nba_daily_games_service import *
+from .prediction_service import *
+from .ranking_service import *

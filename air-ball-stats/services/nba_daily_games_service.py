@@ -3,9 +3,10 @@ from dotenv import load_dotenv
 import logging
 
 from model import NbaGameStats, NbaSeasonStats,Prediction, AirBallPerformance, EditNbaSeasonStats
-from database import Database
+from databases import Database
 from externalApi import NbaApi,AirBallApi, NbaBettingLineApi
-from services import PredictionService, RankingService
+from .prediction_service import PredictionService
+from .ranking_service import RankingService
 from utility import *
 from scripts.logos import *
 
@@ -13,8 +14,8 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 class NbaDailyGamesService:
-    def __init__(self):
-        self.db: Database = Database()
+    def __init__(self, dry_run = False):
+        self.db: Database = Database(dry_run = dry_run)
         self.nbaApi: NbaApi = NbaApi(self.db.year) 
         self.airBallApi: AirBallApi = AirBallApi(MINIMUM_AIRBALL_GAMES)
         self.nbaBettingLine = NbaBettingLineApi()

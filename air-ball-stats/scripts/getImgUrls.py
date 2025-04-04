@@ -1,4 +1,4 @@
-from database import Database
+from databases import Database
 from model import NbaSeasonStats
 
 def getImgUrls():

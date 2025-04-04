@@ -1,7 +1,7 @@
 import json
 from datetime import date, datetime
 
-from model import NbaGameStats
+from .nba_game_stats import NbaGameStats
 from utility import dashesStringToDate, safe_divide, HOME, AWAY
 
 class NbaSeasonStats:

@@ -1,7 +1,6 @@
-from model.NbaGameStats import NbaGameStats
-from model.NbaSeasonStats import NbaSeasonStats
+from model import NbaGameStats, NbaSeasonStats
 from externalApi import NbaApi
-from database import Database
+from databases import Database
 from datetime import date
 from utility import dateToSlashesString, HOME, AWAY
 

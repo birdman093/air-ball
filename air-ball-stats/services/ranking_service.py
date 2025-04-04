@@ -2,11 +2,7 @@ import logging
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
-from model.NbaGameStats import NbaGameStats
-from model.NbaSeasonStats import NbaSeasonStats
-from model.Prediction import Prediction
-from database.Database import Database
-from externalApi import NbaApi, AirBallApi, NbaBettingLineApi
+from model import NbaSeasonStats
 from utility import *
 from scripts.logos import *
 
