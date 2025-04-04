@@ -17,17 +17,17 @@ def reversal(teams: list[str], game_date: date):
             continue
         home_game: NbaGameStats = game[nbaApi.HOME]
         away_game: NbaGameStats = game[nbaApi.AWAY]
-        home_season: NbaSeasonStats = db.GetTeamFromDatabase(home_game.team_name)
-        away_season: NbaSeasonStats = db.GetTeamFromDatabase(away_game.team_name)
+        home_season: NbaSeasonStats = db.get_team_from_db(home_game.team_name)
+        away_season: NbaSeasonStats = db.get_team_from_db(away_game.team_name)
         if home_season.name in teams:
             home_season._reverseteamstats(home_game, True)
             home_season._reverseopponentstats(away_game, away_season.rank)
-            db.EditTeamInDatabase(home_game.team_name, home_season)
+            db.edit_team_in_db(home_game.team_name, home_season)
             reversed += 1
         if away_season.name in teams:
             away_season._reverseteamstats(away_game, False)
             away_season._reverseopponentstats(home_game, home_season.rank)
-            db.EditTeamInDatabase(away_game.team_name, away_season)
+            db.edit_team_in_db(away_game.team_name, away_season)
             reversed += 1
 
     print(f'Reversed {len(teams)} teams')

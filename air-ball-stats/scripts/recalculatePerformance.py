@@ -14,7 +14,7 @@ def recalculatePerformance(start_date: str, end_date: str, season_year: str):
 
     # update air-ball record
     while currentdate <= enddate:
-        predictions: list[Prediction] = db.GetPredictionByDate(currentdate)
+        predictions: list[Prediction] = db.get_predictions_by_date_db(currentdate)
         for prediction in predictions:
             if not predictionService.check_valid_bet(prediction.hometeamplusminusprediction): continue
             ab_performance.add_bet(
@@ -24,7 +24,7 @@ def recalculatePerformance(start_date: str, end_date: str, season_year: str):
 
         currentdate += timedelta(days=1)
 
-    db.EditAirBallPerformance(ab_performance)
+    db.edit_air_ball_performance(ab_performance)
     print(ab_performance)
 
     

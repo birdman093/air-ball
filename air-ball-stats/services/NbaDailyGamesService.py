@@ -32,7 +32,7 @@ class NbaDailyGamesService:
         while current_date <= end_date:
             self.update_daily_stats(current_date)
             
-        self.db.setdailyscriptparameters()
+        self.db.set_daily_parameters()
         logging.info("** Update NBA Games Completed **")
 
     def update_daily_stats(self, current_date):
@@ -48,8 +48,8 @@ class NbaDailyGamesService:
         # ** Get Today's Games, Edit Teams, Yesterday's Predictions **
         current_date_games: dict[str, dict[str, NbaGameStats]] = \
         self.nbaApi.get_played_games_on_date(dateToSlashesString(current_date))
-        previous_date_predictions: list[Prediction] = self.db.GetPredictionByDate(current_date)
-        current_date_edit_teams = EditNbaSeasonStats(self.db.GetAllTeamsFromDatabase(), self.db.year)
+        previous_date_predictions: list[Prediction] = self.db.get_predictions_by_date_db(current_date)
+        current_date_edit_teams = EditNbaSeasonStats(self.db.get_all_teams_from_db(), self.db.year)
 
         for game in current_date_games.values():
             # ** Update Game Result in Edit Teams Locally **
@@ -64,21 +64,21 @@ class NbaDailyGamesService:
                 air_ball_performance)
 
         # ** Add Predictions And Aggregate Stats to DB **     
-        self.db.AddPredictions(current_date, previous_date_predictions)
-        self.db.EditAirBallPerformance(air_ball_performance)
+        self.db.create_predictions_db(current_date, previous_date_predictions)
+        self.db.edit_air_ball_performance(air_ball_performance)
         
         # ** Update Cumulative season Rankings in DB **
         edit_teams_list = current_date_edit_teams.get_team_list()
         self.rankingService.update_season_rankings(edit_teams_list)
 
         # ** Save Edited Teams in DB **
-        self.db.EditAllTeamsInDatabase(edit_teams_list)
+        self.db.edit_all_teams_in_db(edit_teams_list)
 
         # ** Create Predictions for Today's Games **
         current_date += timedelta(days=1)
         predictions = self.predictionService.make_predictions_day(
             EditNbaSeasonStats(edit_teams_list, self.db.year), current_date)
-        self.db.AddPredictions(current_date, predictions)
+        self.db.create_predictions_db(current_date, predictions)
 
     def update_season_stats(self, home_game: NbaGameStats, away_game: NbaGameStats, 
                             edit_teams: EditNbaSeasonStats):
