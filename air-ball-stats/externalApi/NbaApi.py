@@ -6,6 +6,7 @@ from datetime import date
 from nba_api.stats.endpoints import leaguegamefinder
 from nba_api.stats.static import teams
 from model import NbaGameStats
+from utility import HOME, AWAY
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -14,8 +15,6 @@ class NbaApi:
     def __init__(self, year: str):
         self.year = year    #20XX-20XX
         self.LEAGUE = '00'  #NBA
-        self.AWAY = 'away'
-        self.HOME = 'home'
         script_dir = os.path.dirname(os.path.abspath(__file__))
         env_path = os.path.join(script_dir, '../credentials', '.env.local')
         load_dotenv(env_path)
@@ -48,7 +47,7 @@ class NbaApi:
 
         uniquegameids = {}
         for _, game in currentdategames.iterrows():
-            teamside = self.AWAY if '@' in game['MATCHUP'] else self.HOME
+            teamside = AWAY if '@' in game['MATCHUP'] else HOME
 
             if game['GAME_ID'] not in uniquegameids:
                 uniquegameids[game['GAME_ID']] = {}
@@ -61,9 +60,9 @@ class NbaApi:
         return uniquegameids
     
     def invalid_nba_game_stats(self, game: dict[str, NbaGameStats]) -> bool:
-        return self.HOME not in game or self.AWAY not in game
+        return HOME not in game or AWAY not in game
     
     def get_home_away_tuple(self, game: dict[str, NbaGameStats]) -> tuple[NbaGameStats, NbaGameStats]:
-        return (game[self.HOME], game[self.AWAY])
+        return (game[HOME], game[AWAY])
 
     

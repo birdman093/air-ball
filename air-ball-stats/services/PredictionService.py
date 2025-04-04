@@ -10,17 +10,11 @@ from scripts.logos import *
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-MINGAMES = 10
-INVALID_BET = 999
-
-teamNameConversion = {
-    "LA Clippers" : "Los Angeles Clippers"
-}
 
 class PredictionService:
     def __init__(self, season_year):
         self.nbaApi = NbaApi(season_year)
-        self.airBallApi = AirBallApi()
+        self.airBallApi = AirBallApi(MINIMUM_AIRBALL_GAMES)
         self.nbaBettingLine = NbaBettingLineApi()
 
     def make_predictions_day(self, teams: EditNbaSeasonStats, currentdate: date):
@@ -32,14 +26,11 @@ class PredictionService:
         currentdatedashes = dateToDashesString(currentdate)
         logger.info(nextdaygames)
         for game in nextdaygames:
-            hometeam = teams.get_team(game[self.airBallApi.HOME])
-            awayteam = teams.get_team(game[self.airBallApi.AWAY])
+            hometeam = teams.get_team(game[HOME])
+            awayteam = teams.get_team(game[AWAY])
 
-            if hometeam.gamesplayed() >= MINGAMES and awayteam.gamesplayed() >= MINGAMES:
-                prediction = self.airBallApi.makePrediction(
-                hometeam, awayteam, currentdate, MINGAMES)
-            else:
-                prediction = {}
+            prediction = self.airBallApi.make_prediction(
+            hometeam, awayteam, currentdate)
             
             home_team_line = INVALID_BET
             if currentdatedashes == todaydatedashes:
@@ -55,8 +46,8 @@ class PredictionService:
                 hometeam.name, hometeam.gamesplayed(), 
                 awayteam.name, awayteam.gamesplayed(),
                 prediction, home_team_line,
-                str(hometeam.airballformat(True, currentdate, MINGAMES)),
-                str(awayteam.airballformat(False, currentdate, MINGAMES))))
+                str(hometeam.airballformat(True, currentdate, MINIMUM_AIRBALL_GAMES)),
+                str(awayteam.airballformat(False, currentdate, MINIMUM_AIRBALL_GAMES))))
             
         return predictions
 

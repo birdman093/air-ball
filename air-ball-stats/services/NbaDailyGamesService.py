@@ -9,13 +9,11 @@ from services import PredictionService, RankingService
 from utility import *
 from scripts.logos import *
 
-MINGAMES = 10
-
 class NbaDailyGamesService:
     def __init__(self):
         self.db: Database = Database()
         self.nbaApi: NbaApi = NbaApi(self.db.year) 
-        self.airBallApi: AirBallApi = AirBallApi()
+        self.airBallApi: AirBallApi = AirBallApi(MINIMUM_AIRBALL_GAMES)
         self.nbaBettingLine = NbaBettingLineApi()
         logger = logging.getLogger()
         logger.setLevel(logging.INFO)

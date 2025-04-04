@@ -1,9 +1,7 @@
 from collections import defaultdict
 import json, logging
 
-WIN = "win"
-LOSS = "loss"
-TIE = "tie"
+from utility import WIN, LOSS, TIE
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

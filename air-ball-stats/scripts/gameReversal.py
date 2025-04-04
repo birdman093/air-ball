@@ -1,9 +1,9 @@
 from model.NbaGameStats import NbaGameStats
 from model.NbaSeasonStats import NbaSeasonStats
 from externalApi import NbaApi
-from database.Database import Database
+from database import Database
 from datetime import date
-from utility.dates import dateToSlashesString
+from utility import dateToSlashesString, HOME, AWAY
 
 def reversal(teams: list[str], game_date: date):
     ''' Reverse last entry for team using NbaSeasonStats reversal methods'''
@@ -13,10 +13,10 @@ def reversal(teams: list[str], game_date: date):
     games = nbaApi.get_played_games_on_date(dateToSlashesString(game_date))
     reversed = 0
     for game in games.values():
-        if nbaApi.HOME not in game or nbaApi.AWAY not in game:
+        if HOME not in game or AWAY not in game:
             continue
-        home_game: NbaGameStats = game[nbaApi.HOME]
-        away_game: NbaGameStats = game[nbaApi.AWAY]
+        home_game: NbaGameStats = game[HOME]
+        away_game: NbaGameStats = game[AWAY]
         home_season: NbaSeasonStats = db.get_team_from_db(home_game.team_name)
         away_season: NbaSeasonStats = db.get_team_from_db(away_game.team_name)
         if home_season.name in teams:

@@ -1,17 +1,17 @@
 import json
 from datetime import date
+from utility import INVALID_PREDICTION
 
 class Prediction:
     def __init__(self, hometeamname: str = "", hometeamgames: int = 0, 
                  awayteamname: str = "", awayteamgames: int = 0, 
-                 prediction: dict = {}, hometeamlineodds: float = 0,
+                 hometeamprediction: float = INVALID_PREDICTION, hometeamlineodds: float = 0,
                  hometeaminput: str = "", awayteaminput: str = ""):
         self.hometeamname = hometeamname
         self.hometeamgames = hometeamgames
         self.awayteamname = awayteamname
         self.awayteamgames = awayteamgames
-        self.plus_minus: str = "home_team_plus_minus"
-        self.hometeamplusminusprediction: float = prediction.get(self.plus_minus, 999)
+        self.hometeamplusminusprediction: float = hometeamprediction
         self.hometeamplusminusresult: float = 0
         self.hometeamlineodds: float = hometeamlineodds
         self.hometeaminput = hometeaminput

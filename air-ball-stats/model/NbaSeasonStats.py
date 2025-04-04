@@ -2,10 +2,7 @@ import json
 from datetime import date, datetime
 
 from model import NbaGameStats
-from utility import dashesStringToDate, safe_divide
-
-HOME = "home"
-AWAY = "away"
+from utility import dashesStringToDate, safe_divide, HOME, AWAY
 
 class NbaSeasonStats:
     '''

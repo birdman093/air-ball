@@ -3,15 +3,13 @@ from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
 from model import NbaSeasonStats
-from utility import dateToDashesString, convertUTCtoPSTtoDashesString
+from utility import dateToDashesString, convertUTCtoPSTtoDashesString, HOME, AWAY
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 class RapidNbaApi:
     def __init__(self):
-        self.HOME = 'home'
-        self.AWAY = 'away'
         script_dir = os.path.dirname(os.path.abspath(__file__))
         env_path = os.path.join(script_dir, '../credentials', '.env.local')
         load_dotenv(env_path)
@@ -32,8 +30,8 @@ class RapidNbaApi:
                 hometeam = game['teams']['home']['name']
                 awayteam = game['teams']['visitors']['name']
                 logger.info(f'Added Unplayed Game: {awayteam} @ {hometeam}')
-                games.append({self.HOME : hometeam,
-                            self.AWAY : awayteam})
+                games.append({HOME : hometeam,
+                            AWAY : awayteam})
                             # f'{self.HOME}_url' : game['teams']['home']['logo'],
                             # f'{self.AWAY}_url' : game['teams']['visitors']['logo']})
         logger.info(f'{len(data)} API-NBA-V1 Games loaded for {date}')

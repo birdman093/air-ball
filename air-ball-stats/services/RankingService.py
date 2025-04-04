@@ -13,8 +13,6 @@ from scripts.logos import *
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-WINPCTTOLERANCE = .001
-
 class RankingService:
     def __init__(self):
         pass
