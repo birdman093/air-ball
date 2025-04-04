@@ -1,10 +1,7 @@
 from collections import defaultdict
-import json, logging
+import json
 
 from utility import WIN, LOSS, TIE
-
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
 
 class AirBallPerformance:
     def __init__(self):
@@ -48,5 +45,5 @@ class AirBallPerformance:
         return obj
     
     def __str__(self):
-        return f"Air Ball Performance: W: {self.overall_map[WIN]} L: {self.overall_map[LOSS]} T: {self.overall_map[TIE]}"
+        return f"W: {self.overall_map[WIN]} L: {self.overall_map[LOSS]} T: {self.overall_map[TIE]}"
         

@@ -5,8 +5,7 @@ from dotenv import load_dotenv
 from model import NbaSeasonStats
 from utility import MINIMUM_AIRBALL_GAMES, INVALID_PREDICTION, HOME, AWAY
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('AirBallApi')
 
 class AirBallApi:
     def __init__(self, min_games=MINIMUM_AIRBALL_GAMES):
@@ -32,7 +31,7 @@ class AirBallApi:
         
         try:
             response = requests.post(url, json=payload).json()
-            prediction = response[self.HOME_TEAM_PLUS_MINUS][0].get(self.HOME_TEAM_PLUS_MINUS, INVALID_PREDICTION)
+            prediction = response[self.HOME_TEAM_PLUS_MINUS_PREDICTIONS][0].get(self.HOME_TEAM_PLUS_MINUS, INVALID_PREDICTION)
         except Exception as e:
             raise Exception(f'AirBallAPI failed to make prediction for {away.name} @ {home.name}\n' +
                             f'with payload: {payload}\n') from e

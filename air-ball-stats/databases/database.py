@@ -5,14 +5,13 @@ from model import NbaSeasonStats, DailyScriptParameters, Prediction, AirBallPerf
 from .aws_dynamo_db import AwsDynamoDb
 from utility import dateToDashesString, slashesStringToDate, dateToSlashesString
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('Database')
 
 class Database:
     def __init__(self, reset_parameters = False, dry_run = False):
         self.dry_run = dry_run
         if self.dry_run:
-            logger.info('Database running in dry-run mode')
+            logger.info('Running in dry-run mode')
         self.initialize_connection()
         if reset_parameters:
             self.reset_parameters()
@@ -23,19 +22,17 @@ class Database:
         self.db: AwsDynamoDb = AwsDynamoDb()
 
     def reset_parameters(self):
-        logger.info('Database resetting daily parameters')
+        logger.info('Resetting daily parameters')
         self.parameters = DailyScriptParameters()
         self.set_daily_parameters()
 
     def get_daily_parameters(self) -> None:
         data = self.db.getTableConfig()
-        logger.info(data)
-
         try:
             parameters = DailyScriptParameters.from_json(data)
-            logger.info(f'Database loaded Daily Parameters: {parameters}')
+            logger.info(f'Loaded Daily Parameters: {parameters}')
         except Exception as e:
-            raise Exception('ERROR: Database unable to load Daily Parameters') from e
+            raise Exception('Database unable to load Daily Parameters') from e
         self.parameters = parameters
         self.year = parameters.seasonyear
         self.firstdayofseason = parameters.firstdayofseason
@@ -50,9 +47,9 @@ class Database:
         try:
             if not self.dry_run:
                 self.db.setTableConfig(self.parameters.to_json())
-            logger.info(f'Database set Daily Parameters: {self.parameters}')
+            logger.info(f'Set Daily Parameters: {self.parameters}')
         except Exception as e:
-            raise Exception('ERROR: Database unable to set Daily Parameters') from e
+            raise Exception('Database unable to set Daily Parameters') from e
     
     def get_team_from_db(self, teamname: str) -> NbaSeasonStats:
         try:
@@ -61,7 +58,7 @@ class Database:
             raise Exception(f'Database failed to get team: {teamname}') from e
 
         if not result:
-            logger.info(f'Database created team: {teamname} for {self.year}')
+            logger.info(f'Created team: {teamname} for {self.year}')
             return NbaSeasonStats(teamname, self.year)
         else:
             return NbaSeasonStats.from_json(result)
@@ -78,7 +75,7 @@ class Database:
     def get_all_teams_from_db(self) -> list[NbaSeasonStats]:
         try: 
             seasonstatslist: list[str] = self.db.getAllFromDbExceptConfig()
-            logger.info(f'Database loaded {len(seasonstatslist)} teams')
+            logger.info(f'Loaded {len(seasonstatslist)} teams')
         except Exception as e:
             raise Exception('Database failed to get all teams') from e
 
@@ -92,7 +89,7 @@ class Database:
         try:
             if not self.dry_run:
                 self.db.addItemsToDbBatch(teamname, serializeddata)
-            logger.info(f'Database edited {len(seasonstatslist)} teams')
+            logger.info(f'Edited {len(seasonstatslist)} teams')
         except Exception as e:
             raise Exception(f'Database failed to edit all teams: {seasonstatslist}') from e
 
@@ -101,7 +98,7 @@ class Database:
             if not self.dry_run:
                 self.db.setPrediction(dateToDashesString(date), 
                     [prediction.to_json() for prediction in predictions])
-            logger.info(f'Database created {len(predictions)} predictions for {date}')
+            logger.info(f'Created {len(predictions)} predictions for {date}')
         except Exception as e:
             raise Exception(
                 f'Database failed to create preditions for {date}: {predictions}') from e
@@ -111,7 +108,7 @@ class Database:
         try:
             results: list[str] = self.db.getPredictions(dateDashes)
             predictions = [ Prediction.from_json(res) for res in results]
-            logger.info(f'Database loaded {len(predictions)} predictions for {date}')
+            logger.info(f'Loaded {len(predictions)} predictions for {date}')
             return predictions
         except Exception as e:
             raise Exception(f'Failed to Load Predictions for {date}') from e

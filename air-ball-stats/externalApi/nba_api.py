@@ -8,8 +8,7 @@ from nba_api.stats.static import teams
 from model import NbaGameStats
 from utility import HOME, AWAY
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('NbaApi')
 
 class NbaApi:
     def __init__(self, year: str):
@@ -52,12 +51,11 @@ class NbaApi:
             
             uniquegameids[game['GAME_ID']][teamside] = NbaGameStats(game.to_frame().T)
         
-        logger.info(f'{len(uniquegameids)} games loaded ' +
-                  f'from LeagueGameFinder on {slashesDate}')
+        logger.info(f'Loaded {len(uniquegameids)} games from {slashesDate}')
     
         for game in uniquegameids.values():
             if self.invalid_nba_game_stats(game):
-                logger.error(f'** NbaApi Non-Breaking ERROR ** Failed to load game: {game}')
+                logger.error(f'** Non-Breaking ** Failed to load game: {game}')
                 del uniquegameids
 
         return uniquegameids

@@ -4,8 +4,7 @@ import logging
 import time, datetime
 import pytz
 from services import NbaDailyGamesService
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('AWS Lambda Entry Point')
 
 def handler(event, context):
     '''AWS Lambda Entry Point'''  

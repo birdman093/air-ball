@@ -6,8 +6,7 @@ from model import NbaSeasonStats
 from utility import *
 from scripts.logos import *
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('RankingService')
 
 class RankingService:
     def __init__(self):

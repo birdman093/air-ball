@@ -151,7 +151,6 @@ class AwsDynamoDb:
         )
 
     def getPredictions(self, dateDashes: str) -> list[str]:
-        print(dateDashes)
         response = self.dynamodb.get_item(
             TableName=self.prediction_table,
             Key={

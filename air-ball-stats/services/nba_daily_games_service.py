@@ -10,8 +10,7 @@ from .ranking_service import RankingService
 from utility import *
 from scripts.logos import *
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('NbaDailyGamesService')
 
 class NbaDailyGamesService:
     def __init__(self, dry_run = False):
@@ -19,7 +18,6 @@ class NbaDailyGamesService:
         self.nbaApi: NbaApi = NbaApi(self.db.year) 
         self.airBallApi: AirBallApi = AirBallApi(MINIMUM_AIRBALL_GAMES)
         self.nbaBettingLine = NbaBettingLineApi()
-        
         self.predictionService = PredictionService(self.db.year)
         self.rankingService = RankingService()
 
@@ -30,6 +28,7 @@ class NbaDailyGamesService:
 
         while current_date <= end_date:
             self.update_daily_stats(current_date)
+            current_date += timedelta(days=1)
             
         self.db.set_daily_parameters()
 
@@ -41,7 +40,7 @@ class NbaDailyGamesService:
         ** Makes Predictions for Todays Games **
         ** Updates Configurations
         '''
-        logger.info(f'NbaDailyGamesService: Starting Daily Updates for {current_date}')
+        logger.info(f'*** Starting Daily Updates for {current_date} ***')
         air_ball_performance = AirBallPerformance()
 
         # ** Get Today's Games, Edit Teams, Yesterday's Predictions **
@@ -60,7 +59,7 @@ class NbaDailyGamesService:
             self.predictionService.update_yesterdays_predictions(previous_date_predictions, 
                 home_game.team_name, away_game.team_name, home_plus_minus, 
                 air_ball_performance)
-        logger.info(f'NbaDailyGamesService: Locally Updated Season Stats and Prediction Results for {len(current_date_games)} on {current_date}')   
+        logger.info(f'Locally Updated Season Stats and Prediction Results for {len(current_date_games)} games on {current_date}')   
 
         # ** Add Predictions And Aggregate Stats to DB **     
         self.db.create_predictions_db(current_date, previous_date_predictions)
@@ -78,7 +77,7 @@ class NbaDailyGamesService:
         predictions = self.predictionService.make_predictions_day(
             EditNbaSeasonStats(edit_teams_list, self.db.year), prediction_date)
         self.db.create_predictions_db(prediction_date, predictions)
-        logger.info(f'NbaDailyGamesService: Completed Daily Updates for {current_date}')
+        logger.info(f'*** Completed Daily Updates for {current_date} ***')
 
     def update_season_stats(self, home_game: NbaGameStats, away_game: NbaGameStats, 
                             edit_teams: EditNbaSeasonStats):
