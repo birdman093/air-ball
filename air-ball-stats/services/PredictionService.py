@@ -18,7 +18,7 @@ class PredictionService:
         self.nbaBettingLine = NbaBettingLineApi()
 
     def make_predictions_day(self, teams: EditNbaSeasonStats, currentdate: date):
-        logger.info('*** Start Make Predictions Day ***')
+        logger.info(f'PredictionService Starting for {currentdate}')
         nextdaygames: list[dict[str,str]] = RapidNbaApi().getUnPlayedGamesOnDate(currentdate)
         bettingline: dict[str, float] = self.nbaBettingLine.get_game_lines()
         predictions: list[Prediction] = []
@@ -38,9 +38,9 @@ class PredictionService:
                 away_team_line = self.get_betting_line(bettingline, awayteam.name)
                 if self.nbaBettingLine.invalid_game_lines(home_team_line, away_team_line):
                     home_team_line = INVALID_BET
-                    logger.info(f'Conflicting Home/Away Lines Found - No Prediction Created: {awayteam.name} @ {hometeam.name} {home_team_line}')
+                    logger.info(f'Conflicting Home/Away Lines Found - No Prediction created: {awayteam.name} @ {hometeam.name} {home_team_line}')
                 else:
-                    logger.info(f'Prediction Created: {awayteam.name} @ {hometeam.name} {home_team_line}')
+                    logger.info(f'Prediction created: {awayteam.name} @ {hometeam.name} {home_team_line}')
                 
             predictions.append(Prediction(
                 hometeam.name, hometeam.gamesplayed(), 
@@ -48,7 +48,9 @@ class PredictionService:
                 prediction, home_team_line,
                 str(hometeam.airballformat(True, currentdate, MINIMUM_AIRBALL_GAMES)),
                 str(awayteam.airballformat(False, currentdate, MINIMUM_AIRBALL_GAMES))))
-            
+        
+        predictions_str = ', '.join(str(p) for p in predictions)
+        logger.info(f'PredictionService created {len(predictions)} on {currentdate} :[{predictions_str}]')
         return predictions
 
     def get_betting_line(self, bettingline: dict[str,float], teamname) -> float:
