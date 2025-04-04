@@ -18,12 +18,11 @@ class NbaBettingLineApi:
             'X-RapidAPI-Host': os.getenv('NEXT_PUBLIC_RAPIDAPI_ODDS_HOST')
         }
 
-        result = None
         try:
             response = requests.get(url, headers=headers)
             result = response.json()
         except Exception as e:
-            logger.error(f'Script Continued: Odds Failed to load: {e}')
+            logger.error(f'** NON-BREAKING-ERROR ** NbaBettingLineApi Failed to load: {e}')
             result = []
 
         points = {}
@@ -34,7 +33,7 @@ class NbaBettingLineApi:
                         if market['key'] == 'spreads':
                             for outcome in market['outcomes']:
                                 points[outcome["name"]] = float(outcome['point'])
-        print(f'{len(points)} NBA Game Odds loaded')
+        print(f'NbaBettingLineApi loaded {len(points)} games')
         return points
     
     def invalid_game_lines(self, home_line: float, away_line:float) -> bool:
