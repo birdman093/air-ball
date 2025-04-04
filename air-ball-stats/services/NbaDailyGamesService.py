@@ -1,26 +1,15 @@
-#python
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
-import time, logging
-import requests
-# internal 
-from model.NbaGameStats import NbaGameStats
-from model.NbaSeasonStats import NbaSeasonStats
-from model.Prediction import Prediction
-from model.AirBallPerformance import AirBallPerformance
-from model.EditNbaSeasonStats import EditNbaSeasonStats
-from database.Database import Database
-from service.NbaApi import NbaApi
-from service.AirBallApi import AirBallApi
-from service.BettingLine import NbaBettingLine
-from utility.dates import *
+import logging
+
+from model import NbaGameStats, NbaSeasonStats,Prediction, AirBallPerformance, EditNbaSeasonStats
+from database import Database
+from externalApi import NbaApi,AirBallApi, NbaBettingLine
+from services import PredictionService, RankingService
+from utility import *
 from scripts.logos import *
-from core.PredictionService import make_predictions_day, update_yesterdays_predictions
-from core.RankingsService import update_season_rankings
 
 MINGAMES = 10
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
 
 class NbaDailyGamesService:
     def __init__(self):
@@ -28,6 +17,10 @@ class NbaDailyGamesService:
         self.nbaApi: NbaApi = NbaApi(self.db.year) 
         self.airBallApi: AirBallApi = AirBallApi()
         self.nbaBettingLine = NbaBettingLine()
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
+        self.predictionService = PredictionService()
+        self.rankingService = RankingService()
 
     def update_game_stats_by_config(self):
         ''' Updates Daily Games Using Dates from Config'''
@@ -66,7 +59,7 @@ class NbaDailyGamesService:
 
             # ** Update Yesterday's Predictions With Result **
             home_plus_minus = home_game.plus_minus
-            update_yesterdays_predictions(previous_date_predictions, 
+            self.predictionService.update_yesterdays_predictions(previous_date_predictions, 
                 home_game.team_name, away_game.team_name, home_plus_minus, 
                 air_ball_performance)
 
@@ -76,14 +69,14 @@ class NbaDailyGamesService:
         
         # ** Update Cumulative season Rankings in DB **
         edit_teams_list = current_date_edit_teams.get_team_list()
-        update_season_rankings(edit_teams_list)
+        self.rankingService.update_season_rankings(edit_teams_list)
 
         # ** Save Edited Teams in DB **
         self.db.EditAllTeamsInDatabase(edit_teams_list)
 
         # ** Create Predictions for Today's Games **
         current_date += timedelta(days=1)
-        predictions = make_predictions_day(
+        predictions = self.predictionService.make_predictions_day(
             self.airBallApi, 
             self.nbaBettingLine, 
             EditNbaSeasonStats(edit_teams_list, self.db.year), current_date)

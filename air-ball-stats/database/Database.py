@@ -1,11 +1,9 @@
 from datetime import date, timedelta
 import logging
-from model.NbaSeasonStats import NbaSeasonStats
-from model.DailyScriptParameters import DailyScriptParameters
-from model.Prediction import Prediction
-from model.AirBallPerformance import AirBallPerformance
-from database.AwsTableDb import AwsTableDb
-from utility.dates import dateToDashesString, slashesStringToDate, dateToSlashesString
+
+from model import NbaSeasonStats, DailyScriptParameters, Prediction, AirBallPerformance
+from database import AwsTableDb
+from utility import dateToDashesString, slashesStringToDate, dateToSlashesString
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

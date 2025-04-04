@@ -1,6 +1,5 @@
-from database.Database import Database
-from model.NbaSeasonStats import NbaSeasonStats
 import logging
+from model import NbaSeasonStats
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

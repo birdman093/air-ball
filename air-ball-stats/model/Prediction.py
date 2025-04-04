@@ -1,6 +1,5 @@
 import json
 from datetime import date
-from model.NbaSeasonStats import NbaSeasonStats
 
 class Prediction:
     def __init__(self, hometeamname: str = "", hometeamgames: int = 0, 

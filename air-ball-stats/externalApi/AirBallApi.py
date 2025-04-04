@@ -2,8 +2,8 @@ import requests, os, logging
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
-from model.NbaSeasonStats import NbaSeasonStats
-from utility.dates import dateToDashesString, convertUTCtoPSTtoDashesString
+from model import NbaSeasonStats
+from utility import dateToDashesString, convertUTCtoPSTtoDashesString
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

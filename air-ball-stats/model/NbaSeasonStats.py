@@ -1,8 +1,8 @@
 import json
 from datetime import date, datetime
-from model.NbaGameStats import NbaGameStats
-from utility.dates import dashesStringToDate
-from utility.division import safe_divide
+
+from model import NbaGameStats
+from utility import dashesStringToDate, safe_divide
 
 HOME = "home"
 AWAY = "away"
