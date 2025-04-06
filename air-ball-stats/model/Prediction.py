@@ -3,22 +3,25 @@ from datetime import date
 from utility import INVALID_PREDICTION
 
 class Prediction:
+    '''
+    Predictions are based on home team plus/minus
+    '''
     def __init__(self, hometeamname: str = "", hometeamgames: int = 0, 
                  awayteamname: str = "", awayteamgames: int = 0, 
                  hometeamprediction: float = INVALID_PREDICTION, hometeamlineodds: float = 0,
                  hometeaminput: str = "", awayteaminput: str = ""):
-        self.hometeamname = hometeamname
-        self.hometeamgames = hometeamgames
-        self.awayteamname = awayteamname
-        self.awayteamgames = awayteamgames
-        self.hometeamplusminusprediction: float = hometeamprediction
-        self.hometeamplusminusresult: float = 0
-        self.hometeamlineodds: float = hometeamlineodds
-        self.hometeaminput = hometeaminput
-        self.awayteaminput = awayteaminput
+        self.home_name = hometeamname
+        self.home_games_played = hometeamgames
+        self.away_name = awayteamname
+        self.away_games_played = awayteamgames
+        self.home_prediction: float = hometeamprediction
+        self.home_result: float = 0
+        self.home_line: float = hometeamlineodds
+        self.home_input = hometeaminput
+        self.away_input = awayteaminput
 
     def __str__(self):
-        return (f"{self.awayteamname} @ {self.hometeamname} {self.hometeamplusminusprediction})")
+        return (f"{self.away_name} @ {self.home_name} {self.home_prediction})")
 
     def to_json(self):
         return json.dumps(self.__dict__)

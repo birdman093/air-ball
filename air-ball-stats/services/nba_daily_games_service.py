@@ -55,10 +55,8 @@ class NbaDailyGamesService:
             self.update_season_stats(home_game, away_game, current_date_edit_teams)
 
             # ** Update Yesterday's Predictions With Result **
-            home_plus_minus = home_game.plus_minus
-            self.predictionService.update_yesterdays_predictions(previous_date_predictions, 
-                home_game.team_name, away_game.team_name, home_plus_minus, 
-                air_ball_performance)
+            self.predictionService.update_yesterdays_predictions(
+                previous_date_predictions, home_game, away_game, air_ball_performance)
         logger.info(f'Locally Updated Season Stats and Prediction Results for {len(current_date_games)} games on {current_date}')   
 
         # ** Add Predictions And Aggregate Stats to DB **     

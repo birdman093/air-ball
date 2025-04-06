@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta, date
+import math
 from dotenv import load_dotenv
 import logging
 
-from model import EditNbaSeasonStats, Prediction, AirBallPerformance
+from model import EditNbaSeasonStats, Prediction, AirBallPerformance, NbaGameStats
 from externalApi import NbaApi, AirBallApi, NbaBettingLineApi, RapidNbaApi
 from utility import *
 
@@ -54,19 +55,33 @@ class PredictionService:
         if not line: return INVALID_BET
         return line
 
-    def check_valid_bet(self, line):
-        return line != INVALID_BET
+    def check_valid_prediction(self, line: float):
+        return not math.isclose(line, INVALID_PREDICTION)
 
-    def update_yesterdays_predictions(self, yesterday_predictions: list[Prediction], 
-            home_name: str, away_name: str, home_plus_minus: int,
-            air_ball_performance: AirBallPerformance) -> None:
-        for prediction in yesterday_predictions:
-            if prediction.hometeamname == home_name and prediction.awayteamname == away_name:
-                prediction.hometeamplusminusresult = home_plus_minus
-                if self.check_valid_bet(prediction.hometeamplusminusprediction):
-                    air_ball_performance.add_bet(
-                        prediction.hometeamplusminusresult,
-                        prediction.hometeamlineodds * -1,  # reversal of odds
-                        prediction.hometeamplusminusprediction)
-                    return                
-        logger.info(f'PredictionService could not find prediction for {away_name} @ {home_name}')
+    def update_yesterdays_predictions(self, 
+        yesterday_predictions: list[Prediction], 
+        home_game: NbaGameStats, away_game: NbaGameStats, 
+        air_ball_performance: AirBallPerformance) -> None:
+
+        # matching prediction to game results
+        game_predictions = [
+        prediction
+        for prediction in yesterday_predictions
+        if prediction.home_name == home_game.team_name
+        and prediction.away_name == away_game.team_name
+        ]
+        yesterday_prediction = game_predictions[0] if len(game_predictions) > 0 else None
+
+        # updating yesterdays prediction and air-ball-performance
+        if yesterday_prediction and self.check_valid_prediction(yesterday_prediction.home_prediction):
+            yesterday_prediction.home_result = home_game.plus_minus
+            air_ball_performance.add_bet(
+                yesterday_prediction.home_result,
+                yesterday_prediction.home_line * -1,  # reversal of odds
+                yesterday_prediction.home_prediction)
+        elif yesterday_prediction:
+            logger.info(f'PredictionService found an invalid prediction for' +
+                        f'{away_game.team_name} @ {home_game.team_name}')  
+        else:                
+            logger.info(f'PredictionService unable to find prediction for' +
+                        f'{away_game.team_name} @ {home_game.team_name}')
