@@ -73,13 +73,16 @@ class PredictionService:
         yesterday_prediction = game_predictions[0] if len(game_predictions) > 0 else None
 
         # updating yesterdays prediction and air-ball-performance
-        if yesterday_prediction and self.check_valid_prediction(yesterday_prediction.home_prediction):
+        if yesterday_prediction and self.check_valid_prediction(yesterday_prediction.home_prediction) \
+            and self.check_valid_prediction(yesterday_prediction.home_line) \
+                and self.check_valid_prediction(home_game.plus_minus):
             yesterday_prediction.home_result = home_game.plus_minus
             air_ball_performance.add_bet(
                 yesterday_prediction.home_result,
                 yesterday_prediction.home_line * -1,  # reversal of odds
                 yesterday_prediction.home_prediction)
         elif yesterday_prediction:
+            yesterday_prediction.home_result = home_game.plus_minus
             logger.info(f'PredictionService found an invalid prediction for' +
                         f'{away_game.team_name} @ {home_game.team_name}')  
         else:                
