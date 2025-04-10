@@ -16,13 +16,18 @@ def recalculatePerformance(start_date: str, end_date: str, season_year: str):
     while currentdate <= enddate:
         predictions: list[Prediction] = db.get_predictions_by_date_db(currentdate)
         for prediction in predictions:
-            if prediction_service.check_valid_prediction(prediction.home_prediction): continue
-            ab_performance.add_bet(
-                prediction.home_result,
-                prediction.home_line * -1, # reversal of odds 
-                prediction.home_prediction)
+            print(prediction)
+            print(prediction.hometeamplusminusresult,
+                    prediction.hometeamlineodds * -1, # reversal of odds 
+                    prediction.hometeamplusminusprediction)
+            if prediction_service.check_valid_prediction(prediction.hometeamplusminusprediction): 
+                ab_performance.add_bet(
+                    prediction.hometeamplusminusresult,
+                    prediction.hometeamlineodds * -1, # reversal of odds 
+                    prediction.hometeamplusminusprediction)
 
         currentdate += timedelta(days=1)
 
-    db.edit_air_ball_performance(ab_performance)
+    #db.edit_air_ball_performance(ab_performance)
     print(ab_performance)
+    
