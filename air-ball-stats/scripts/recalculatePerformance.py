@@ -1,13 +1,13 @@
-'''
 from datetime import datetime, timedelta, date
 from model import AirBallPerformance, Prediction
 from databases import Database
-from services import PredictionService
 from utility.dates import *
 
 def recalculatePerformance(start_date: str, end_date: str, season_year: str):
+    from services.prediction_service import PredictionService
+
     db: Database = Database()
-    predictionService: PredictionService = PredictionService(season_year)
+    prediction_service: PredictionService = PredictionService(season_year)
     currentdate = slashesStringToDate(start_date) 
     enddate = slashesStringToDate(end_date) 
     ab_performance = AirBallPerformance()
@@ -16,15 +16,13 @@ def recalculatePerformance(start_date: str, end_date: str, season_year: str):
     while currentdate <= enddate:
         predictions: list[Prediction] = db.get_predictions_by_date_db(currentdate)
         for prediction in predictions:
-            if not predictionService.check_valid_bet(prediction.hometeamplusminusprediction): continue
+            if prediction_service.check_valid_prediction(prediction.home_prediction): continue
             ab_performance.add_bet(
-                prediction.hometeamplusminusresult,
-                prediction.hometeamlineodds * -1, # reversal of odds 
-                prediction.hometeamplusminusprediction)
+                prediction.home_result,
+                prediction.home_line * -1, # reversal of odds 
+                prediction.home_prediction)
 
         currentdate += timedelta(days=1)
 
     db.edit_air_ball_performance(ab_performance)
     print(ab_performance)
-
-'''
