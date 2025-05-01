@@ -33,6 +33,7 @@ class RapidNbaApi:
                             # f'{self.HOME}_url' : game['teams']['home']['logo'],
                             # f'{self.AWAY}_url' : game['teams']['visitors']['logo']})
         logger.info(f'Loaded {len(data)} games for {date}')
+        logger.info(", ".join(f"{game['teams']['home']['name']} vs {game['teams']['visitors']['name']}" for game in data))
         return games
     
     def getGamesRequest(self, date):

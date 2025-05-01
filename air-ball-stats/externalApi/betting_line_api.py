@@ -33,6 +33,7 @@ class NbaBettingLineApi:
                             for outcome in market['outcomes']:
                                 points[outcome["name"]] = float(outcome['point'])
         logger.info(f'Loaded {len(points)} games')
+        logger.info(", ".join(f"{game}: {point}" for game, point in points.items()))
         return points
     
     def valid_game_lines(self, home_line: float, away_line:float) -> bool:

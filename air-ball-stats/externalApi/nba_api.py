@@ -52,6 +52,7 @@ class NbaApi:
             uniquegameids[game['GAME_ID']][teamside] = NbaGameStats(game.to_frame().T)
         
         logger.info(f'Loaded {len(uniquegameids)} games from {slashesDate}')
+        logger.info(", ".join(f"{game}: {home}, {away}" for game, (home, away) in uniquegameids.items()))
     
         for game in uniquegameids.values():
             if self.invalid_nba_game_stats(game):
