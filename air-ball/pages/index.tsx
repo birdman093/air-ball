@@ -11,20 +11,19 @@ import { NbaGamesByDate } from '@/services/NbaGamesByDate'
 import { gameTable } from '@/components/gameTable'
 
 export const getServerSideProps: GetServerSideProps<{
-  todaygames: nbaGame[]
+  todaygames: nbaGame[],
+  today: string
 }> = async (context) => {
   const today = todayDate();
   const todaygames: nbaGame[] = await NbaGamesByDate(today);
-  const record = {};
-  return { props: { todaygames} };
+  return { props: { todaygames, today} };
 };
 
 export default function Daily({
-  todaygames,
+  todaygames, today,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [games, setGames] = useState<nbaGame[]>([]);
-  const today = todayDate();
-
+  
   useEffect(() => {
     setGames(todaygames);
   }, []);

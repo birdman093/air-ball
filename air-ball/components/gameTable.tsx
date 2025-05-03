@@ -70,7 +70,11 @@ export function gameTable(games: nbaGame[]) {
             <td className='td-img' >
               <TeamDisplay imageUrl={getTeamImage(game.hometeam)} abbreviation={game.hometeam_abbr} />
             </td>
-            <td>{new Date(game.gametime).toLocaleTimeString()}</td>
+            <td>
+              {new Date(game.gametime).toLocaleTimeString([], {
+                hour:   '2-digit', minute: '2-digit'
+              })}
+            </td>
             <td className='img-line-left'>
               {lineToImg(game.hometeamline, getTeamImage(game.hometeam), 
               getTeamImage(game.awayteam))}
