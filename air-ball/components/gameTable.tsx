@@ -59,7 +59,7 @@ export function gameTable(games: nbaGame[]) {
             { value: -1*roundLine(game.homeairballline), image: "./air-ball.png" }
           ];
 
-          return ( 
+          return game.hometeamline !== INVALID_BET && game.homeairballline !== INVALID_BET ? ( 
           <tr key={index} style={trStyle}>   
             <td className='td-img'>
               <TeamDisplay imageUrl={getTeamImage(game.awayteam)} abbreviation={game.awayteam_abbr} />
@@ -142,8 +142,8 @@ export function gameTable(games: nbaGame[]) {
                 ? game.hometeam : game.awayteam)}/>
               }
             </td>
-          </tr>
-      )})}
+          </tr>) : <></>
+      })}
     </tbody>
     </table>)
 }

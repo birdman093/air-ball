@@ -10,6 +10,7 @@ import { Tooltip } from '@mui/material'
 
 const MIN_SLIDER = -15;
 const MAX_SLIDER = 15;
+const INVALID_BET = 999;
 
 export function pastGameTable(games: nbaGame[]) {
   return (
@@ -34,7 +35,9 @@ export function pastGameTable(games: nbaGame[]) {
           image: game.hometeamresult < 0 ? getTeamImage(game.hometeam) : getTeamImage(game.awayteam)}
         ];
 
-        return (
+        return game.hometeamline !== INVALID_BET && 
+        game.homeairballline !== INVALID_BET && 
+        game.hometeamresult !== INVALID_BET ? (
         <tr key={index}>
           <td className='td-img'>
               <TeamDisplay imageUrl={getTeamImage(game.awayteam)} 
@@ -133,7 +136,7 @@ export function pastGameTable(games: nbaGame[]) {
                 </div>
             </td>
 
-        </tr>)
+        </tr>) : <></>
     })}
   </tbody>
   </table>)
