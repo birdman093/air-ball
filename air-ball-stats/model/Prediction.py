@@ -1,6 +1,6 @@
 import json
 from datetime import date
-from utility import INVALID_PREDICTION
+from utility import INVALID_PREDICTION, INVALID_RESULT
 
 class Prediction:
     '''
@@ -15,7 +15,7 @@ class Prediction:
         self.awayteamname = awayteamname
         self.awayteamgames = awayteamgames
         self.hometeamplusminusprediction: float = hometeamprediction
-        self.hometeamplusminusresult: float = 0
+        self.hometeamplusminusresult: float = INVALID_RESULT
         self.hometeamlineodds: float = hometeamlineodds
         self.hometeaminput = hometeaminput
         self.awayteaminput = awayteaminput
