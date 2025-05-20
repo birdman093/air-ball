@@ -5,3 +5,5 @@ from .newSeason import *
 from .recalculatePerformance import *
 from .testAirBallPerformance import *
 from .testBettingLine import *
+from .apiTest import *
+from .dryRun import *

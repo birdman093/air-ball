@@ -1,4 +1,3 @@
-import logging
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
@@ -6,7 +5,7 @@ from model import NbaSeasonStats
 from utility import *
 from scripts.logos import *
 
-logger = logging.getLogger('RankingService')
+logger_name = 'RankingService'
 
 class RankingService:
     def __init__(self):

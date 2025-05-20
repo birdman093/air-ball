@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from model import NbaSeasonStats
 from utility import MINIMUM_AIRBALL_GAMES, INVALID_PREDICTION, HOME, AWAY
 
-logger = logging.getLogger('AirBallApi')
+logger_name = 'AirBallApi'
 
 class AirBallApi:
     def __init__(self, min_games=MINIMUM_AIRBALL_GAMES):

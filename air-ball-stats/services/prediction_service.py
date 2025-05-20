@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta, date
 import math
 from dotenv import load_dotenv
-import logging
 
 from model import EditNbaSeasonStats, Prediction, AirBallPerformance, NbaGameStats
 from externalApi import NbaApi, AirBallApi, NbaBettingLineApi, RapidNbaApi
 from utility import *
 
-logger = logging.getLogger('PredictionService')
+logger_name = 'PredictionService'
 
 class PredictionService:
     def __init__(self, season_year):
@@ -16,7 +15,8 @@ class PredictionService:
         self.nbaBettingLine = NbaBettingLineApi()
 
     def make_predictions_day(self, teams: EditNbaSeasonStats, currentdate: date):
-        logger.info(f'Starting for {currentdate}')
+        log_info(logger_name, f'Starting for {currentdate}')
+        # TODO: use Nba API scoreboard endpoint
         nextdaygames = RapidNbaApi().getUnPlayedGamesOnDate(currentdate)
         bettingline = self.nbaBettingLine.get_game_lines()
         predictions = []
@@ -45,7 +45,7 @@ class PredictionService:
                 str(awayteam.airballformat(False, currentdate, MINIMUM_AIRBALL_GAMES))))
         
         predictions_str = ', '.join(str(p) for p in predictions)
-        logger.info(f'Created {len(predictions)} predictions on {currentdate} :[{predictions_str}]')
+        log_info(logger_name, f'Created {len(predictions)} predictions on {currentdate} :[{predictions_str}]')
         return predictions
 
     def get_betting_line(self, bettingline: dict[str,float], teamname) -> float:
@@ -83,8 +83,8 @@ class PredictionService:
                 yesterday_prediction.hometeamplusminusprediction)
         elif yesterday_prediction:
             yesterday_prediction.hometeamplusminusresult = home_game.plus_minus
-            logger.info(f'PredictionService found an invalid prediction for' +
+            log_info(logger_name, f'PredictionService found an invalid prediction for' +
                         f'{away_game.team_name} @ {home_game.team_name}')  
         else:                
-            logger.info(f'PredictionService unable to find prediction for' +
+            log_info(logger_name, f'PredictionService unable to find prediction for' +
                         f'{away_game.team_name} @ {home_game.team_name}')

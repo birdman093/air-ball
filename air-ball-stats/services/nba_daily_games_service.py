@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
-import logging
 
 from model import NbaGameStats, NbaSeasonStats, Prediction, AirBallPerformance, EditNbaSeasonStats
 from databases import Database
@@ -10,7 +9,7 @@ from .ranking_service import RankingService
 from utility import *
 from scripts.logos import *
 
-logger = logging.getLogger('NbaDailyGamesService')
+logger_name = 'NbaDailyGamesService'
 
 class NbaDailyGamesService:
     def __init__(self, dry_run = False):
@@ -40,7 +39,7 @@ class NbaDailyGamesService:
         ** Makes Predictions for Todays Games **
         ** Updates Configurations
         '''
-        logger.info(f'*** Starting Daily Updates for {current_date} ***')
+        log_info(logger_name, f'*** Starting Daily Updates for {current_date} ***')
         air_ball_performance = AirBallPerformance()
 
         # ** Get Today's Games, Edit Teams, Yesterday's Predictions **
@@ -57,7 +56,7 @@ class NbaDailyGamesService:
             # ** Update Yesterday's Predictions With Result **
             self.predictionService.update_yesterdays_predictions(
                 previous_date_predictions, home_game, away_game, air_ball_performance)
-        logger.info(f'Locally Updated Season Stats and Prediction Results for {len(current_date_games)} games on {current_date}')   
+        log_info(logger_name, f'Locally Updated Season Stats and Prediction Results for {len(current_date_games)} games on {current_date}')   
 
         # ** Add Predictions And Aggregate Stats to DB **     
         self.db.create_predictions_db(current_date, previous_date_predictions)
@@ -75,7 +74,7 @@ class NbaDailyGamesService:
         predictions = self.predictionService.make_predictions_day(
             EditNbaSeasonStats(edit_teams_list, self.db.year), prediction_date)
         self.db.create_predictions_db(prediction_date, predictions)
-        logger.info(f'*** Completed Daily Updates for {current_date} ***')
+        log_info(logger_name, f'*** Completed Daily Updates for {current_date} ***')
 
     def update_season_stats(self, home_game: NbaGameStats, away_game: NbaGameStats, 
                             edit_teams: EditNbaSeasonStats):

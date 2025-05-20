@@ -1,11 +1,11 @@
-import requests, os, logging
+import requests, os
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv
 
 from model import NbaSeasonStats
-from utility import dateToDashesString, convertUTCtoPSTtoDashesString, HOME, AWAY
+from utility import dateToDashesString, convertUTCtoPSTtoDashesString, HOME, AWAY, log_info
 
-logger = logging.getLogger('RapidNbaApi')
+logger_name = 'RapidNbaApi'
 
 class RapidNbaApi:
     def __init__(self):
@@ -32,8 +32,8 @@ class RapidNbaApi:
                             AWAY : awayteam})
                             # f'{self.HOME}_url' : game['teams']['home']['logo'],
                             # f'{self.AWAY}_url' : game['teams']['visitors']['logo']})
-        logger.info(f'Loaded {len(data)} games for {date}')
-        logger.info(", ".join(f"{game['teams']['home']['name']} vs {game['teams']['visitors']['name']}" for game in data))
+        log_info(logger_name, f'Loaded {len(data)} games for {date}')
+        log_info(logger_name, ", ".join(f"{game['teams']['home']['name']} vs {game['teams']['visitors']['name']}" for game in data))
         return games
     
     def getGamesRequest(self, date):

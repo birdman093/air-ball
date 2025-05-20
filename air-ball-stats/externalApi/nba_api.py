@@ -1,4 +1,4 @@
-import logging, os
+import os
 from dotenv import load_dotenv
 import pandas as pd
 from datetime import date
@@ -6,9 +6,9 @@ from datetime import date
 from nba_api.stats.endpoints import leaguegamefinder
 from nba_api.stats.static import teams
 from model import NbaGameStats
-from utility import HOME, AWAY
+from utility import HOME, AWAY, log_info, log_error
 
-logger = logging.getLogger('NbaApi')
+logger_name = 'NbaApi'
 
 class NbaApi:
     def __init__(self, year: str):
@@ -51,15 +51,19 @@ class NbaApi:
             
             uniquegameids[game['GAME_ID']][teamside] = NbaGameStats(game.to_frame().T)
         
-        logger.info(f'Loaded {len(uniquegameids)} games from {slashesDate}')
-        logger.info(", ".join(f"{game}: {home}, {away}" for game, (home, away) in uniquegameids.items()))
+        log_info(logger_name, f'Loaded {len(uniquegameids)} games from {slashesDate}')
+        log_info(logger_name, ", ".join(f"{game}: {home}, {away}" for game, (home, away) in uniquegameids.items()))
     
         for game in uniquegameids.values():
             if self.invalid_nba_game_stats(game):
-                logger.error(f'** Non-Breaking ** Failed to load game: {game}')
+                log_error(logger_name, f'** Non-Breaking ** Failed to load game: {game}')
                 del uniquegameids
 
         return uniquegameids
+    
+    # TODO: use Nba API scoreboard endpoint for todays games
+
+    # TODO: create function to use scoreboard for today, and game finder for past dates
     
     def invalid_nba_game_stats(self, game: dict[str, NbaGameStats]) -> bool:
         return HOME not in game or AWAY not in game

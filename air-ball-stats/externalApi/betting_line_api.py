@@ -1,7 +1,8 @@
-import os, requests, logging
+import os, requests
 from dotenv import load_dotenv
+from utility import log_info, log_error
 
-logger = logging.getLogger('NbaBettingLineApi')
+logger_name = 'NbaBettingLineApi'
 
 class NbaBettingLineApi:
     def __init__(self):
@@ -21,7 +22,7 @@ class NbaBettingLineApi:
             response = requests.get(url, headers=headers)
             result = response.json()
         except Exception as e:
-            logger.error(f'** NON-BREAKING ** Failed to load Api: {e}')
+            log_error(logger_name,f'** NON-BREAKING ** Failed to load Api: {e}')
             result = []
 
         points = {}
@@ -32,8 +33,8 @@ class NbaBettingLineApi:
                         if market['key'] == 'spreads':
                             for outcome in market['outcomes']:
                                 points[outcome["name"]] = float(outcome['point'])
-        logger.info(f'Loaded {len(points)} games')
-        logger.info(", ".join(f"{game}: {point}" for game, point in points.items()))
+        log_info(logger_name, f'Loaded {len(points)} games')
+        log_info(logger_name, ", ".join(f"{game}: {point}" for game, point in points.items()))
         return points
     
     def valid_game_lines(self, home_line: float, away_line:float) -> bool:
